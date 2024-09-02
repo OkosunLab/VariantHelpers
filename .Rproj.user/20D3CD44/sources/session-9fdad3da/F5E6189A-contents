@@ -1,0 +1,28 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+objs <- lapply(seq(1,1000000), function(i) {
+    mtcars
+})
+foo <- function() {
+    print("Running through objects")
+    pb = txtProgressBar(min = 0, 
+                        max = length(objs), 
+                        initial = 0, 
+                        style = 3)
+    counter = 0
+    
+    x <- lapply(objs, function(obj){
+        Sys.sleep(0.0001)
+        counter <<- counter + 1
+        setTxtProgressBar(pb,counter)
+    })
+}
+
+foo()
+
+```
+
