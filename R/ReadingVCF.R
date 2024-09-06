@@ -55,6 +55,8 @@ read_VCF <- function(file, pass = TRUE, verbose = FALSE, ...) {
             filter(FILTER == "PASS")
     }
     VCF <- set_sample_name(VCF, file, ...)
+    VCF %>%
+        filter(! grepl("<.*>", ALT)) %>%
     VCF
 }
 
