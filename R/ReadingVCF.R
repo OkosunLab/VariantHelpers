@@ -64,7 +64,7 @@ read_VCF <- function(file, pass = TRUE, verbose = FALSE, ...) {
 #' @title process_counts
 #' @param file The path to the file to be read
 #' @param VCF the VCF file with the tumour format split
-#' @param Caller the caller the data is from. If NULL determines from filepath (default: NULL)
+#' @param Caller the caller the data is from. If empty determines from filepath (default: "")
 #' @param verbose print out extra text for debugging (verbose: FALSE)
 #' @return A dataframe of the VCF with ADR, RDR, DP and AF columns
 #' @keywords VCF
@@ -74,7 +74,7 @@ read_VCF <- function(file, pass = TRUE, verbose = FALSE, ...) {
 #'
 #' process_counts(file, VCF)
 
-process_counts <- function(file, VCF, Caller = NULL, ...) {
+process_counts <- function(file, VCF, Caller = "", ...) {
     if (grepl("Strelka2", file) | Caller == "Strelka2") {
         VCF <- process_Strelka2(VCF, ...)
     } else if (grepl("Mutect2", file) | Caller == "Mutect2") {
