@@ -4,14 +4,14 @@
 \alias{process_counts}
 \title{process_counts}
 \usage{
-process_counts(file, VCF, Caller = NULL, ...)
+process_counts(file, VCF, Caller = "", ...)
 }
 \arguments{
 \item{file}{The path to the file to be read}
 
 \item{VCF}{the VCF file with the tumour format split}
 
-\item{Caller}{the caller the data is from. If NULL determines from filepath (default: NULL)}
+\item{Caller}{the caller the data is from. If empty determines from filepath (default: "")}
 
 \item{verbose}{print out extra text for debugging (verbose: FALSE)}
 }
