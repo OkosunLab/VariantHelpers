@@ -1,13 +1,14 @@
-#' A function read a VCF file removing the header (denoted by the ##)
+#' A function fully process the VCF through the pipeline.
 #'
-#' @title read_VCF
+#' @title process_vcf
 #' @param file The path to the file to be read
 #' @return A dataframe of the VCF skipping the commented lines
 #' @keywords VCF
+#' @importFrom tibble remove_rownames
 #' @export
 #' @examples
 #'
-#' read_VCF(file)
+#' process_vcf(file)
 
 process_vcf <- function(file, ...) {
     ## Load file
@@ -18,6 +19,37 @@ process_vcf <- function(file, ...) {
     VCF <- split_format(VCF, ...)
     ## Get counts setup
     VCF <- process_counts(file, VCF, ...)
+}
+
+#' A function read a VCF file removing the header (denoted by the ##)
+#'
+#' @title process_folder
+#' @param file The path to the file to be read
+#' @return A dataframe of the VCF skipping the commented lines
+#' @keywords VCF
+#' @importFrom tibble remove_rownames
+#' @export
+#' @examples
+#'
+#' read_VCF(file)
+
+process_folder <- function(folder, FolderPattern = ".annotated.vcf", ...) {
+    counter = 0
+    VCFs <- list.files(folder, pattern = FolderPattern, full.names = TRUE)
+    print(paste0("Reading variant calls from ", length(VCFs), " files in ", folder))
+    pb = txtProgressBar(min = 0,
+                        max = length(VCFs),
+                        initial = 0,
+                        style = 3)
+    VCFs <-
+        lapply(VCFs, function(file) {
+            counter <<- counter + 1
+            vcf <- process_vcf(file, ...)
+            setTxtProgressBar(pb,counter)
+            vcf
+        }) %>% bind_rows()
+    close(pb)
+    VCFs
 }
 
 #' A function to read a VCF file whilst removing the header (denoted by the ##)
@@ -275,7 +307,7 @@ process_Strelka2 <- function(VCF, ...) {
 #' @param VCF a dataframe of VCF records from Varscan2 with the TUMOR columns separated
 #' @return A dataframe of the calls with the VEP annotations separated into columns. Multiple transcripts will be split into different columns.
 #' @keywords VCF
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate filter
 #' @export
 #'
 #' @examples
@@ -285,7 +317,7 @@ process_Strelka2 <- function(VCF, ...) {
 process_Varscan2 <- function(VCF, sample = NULL, ...) {
     VCF <- VCF %>%
         ## SS=2 in INFO retains the SOMATIC variants
-        subset(grepl("SS=2", INFO)) %>%
+        filter(grepl("SS=2", INFO)) %>%
         mutate(RDP = as.numeric(RD),
                ADP = as.numeric(AD),
                DP = as.numeric(DP),
@@ -325,7 +357,7 @@ process_Mutect2 <- function(VCF, ...) {
 #' @param VCF a dataframe of VCF records from VarDict with the TUMOR columns separated
 #' @return A dataframe of the calls with the VEP annotations separated into columns. Multiple transcripts will be split into different columns.
 #' @keywords VCF
-#' @importFrom dplyr mutate
+#' @importFrom dplyr mutate filter
 #' @export
 #'
 #' @examples
@@ -339,7 +371,7 @@ process_VarDict <- function(VCF, ...) {
                RDP = as.numeric(RDP),
                ADP = as.numeric(ADP),
                AF = as.numeric(AF)) %>%
-        subset(grepl("STATUS=.*Somatic", INFO)) %>%
+        filter(grepl("STATUS=.*Somatic", INFO)) %>%
         mutate(POS = as.numeric(POS))
     VCF
 }
