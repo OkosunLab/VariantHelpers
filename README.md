@@ -44,6 +44,16 @@ VCF <- split_format(VCF, ...)
 VCF <- process_counts(file, VCF, ...)
 ```
 
+### Consensus calling
+
+When using multiple variant callers you can take the consensus of the calls from the different callers to filter out potential false calls.
+
+#### Upset plots
+
+Upset plots are a better way of comparing the overlap of multiple groups than Venn Diagrams. Venn Diagrams essentially stop being at all informative when you reach 5 + groups and are already pretty hard to quickly understand with 4 groups.
+
+Upset graphs allow for a much better visualization of things shared between groups
+
 
 
 

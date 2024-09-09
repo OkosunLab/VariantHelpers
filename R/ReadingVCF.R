@@ -21,10 +21,11 @@ process_vcf <- function(file, ...) {
     VCF <- process_counts(file, VCF, ...)
 }
 
-#' A function read a VCF file removing the header (denoted by the ##)
+#' A function to process a vector of VCF files
 #'
-#' @title process_folder
-#' @param file The path to the file to be read
+#' @title process_VCFs
+#' @param VCFs a vector of paths to VCF files
+#' @param JoinAll bool of whether to join all the files together (default TRUE)
 #' @return A dataframe of the VCF skipping the commented lines
 #' @keywords VCF
 #' @importFrom tibble remove_rownames
@@ -33,7 +34,7 @@ process_vcf <- function(file, ...) {
 #'
 #' process_VCFs(file)
 
-process_VCFs <- function(VCFs, ...) {
+process_VCFs <- function(VCFs, JoinAll = TRUE, ...) {
     counter = 0
     print(paste0("Reading variant calls from ", length(VCFs), " files"))
     pb = txtProgressBar(min = 0,
@@ -46,15 +47,18 @@ process_VCFs <- function(VCFs, ...) {
             vcf <- process_vcf(file, ...)
             setTxtProgressBar(pb,counter)
             vcf
-        }) %>% bind_rows()
+        })
     close(pb)
+    if (JoinAll == TRUE) {
+        VCFs <- VCFs %>% bind_rows()
+    }
     VCFs
 }
 
 #' A function read a VCF file removing the header (denoted by the ##)
 #'
 #' @title process_folder
-#' @param file The path to the file to be read
+#' @param folder String containing the path to a folder of VCF files.
 #' @return A dataframe of the VCF skipping the commented lines
 #' @keywords VCF
 #' @importFrom tibble remove_rownames
@@ -246,7 +250,8 @@ split_vep <- function(VCF, header = FALSE, ...) {
         ## Split INFO by |
         SplitRow <- Row[["INFO"]] %>% str_split_1(pattern = "\\|")
         ## Remove the columns you expect from the caller
-        VEP <- SplitRow[-c(1:(length(SplitRow) %% length(header)))] %>%
+        VEP <-
+            SplitRow[-c(1:(length(SplitRow) %% length(header)))] %>%
             ## create a matrix with nrows the same length as the headers
             matrix(nrow = length(header)) %>%
             ## transpose this and make it a dataframe
@@ -256,14 +261,18 @@ split_vep <- function(VCF, header = FALSE, ...) {
             setNames(header)
         ## bind the full row to the trimmed INFO column and VEP annotations
         cbind(Row %>% t(),
-              INFO.Trim = paste(
-                  SplitRow[c(1:(length(SplitRow) %% length(header)))],
-                  collapse = "|"),
+              INFO.Trim = paste(SplitRow[c(1:(length(SplitRow) %% length(header)))],
+                                collapse = "|"),
               VEP)
     }) %>% bind_rows() %>%
         ## AF is the 1000 genomes total pop frequency, so rename this
-        rename("AF_ALL" = "AF")
-}
+        rename("AF_ALL" = "AF") %>%
+        mutate(
+            AF_ALL = ifelse(is.na(as.numeric(AF_ALL)), 0, as.numeric(AF_ALL)),
+            gnomADe_AF = ifelse(is.na(as.numeric(gnomADe_AF)), 0, as.numeric(gnomADe_AF)),
+            gnomADg_AF = ifelse(is.na(as.numeric(gnomADg_AF)), 0, as.numeric(gnomADg_AF))
+            )
+            }
 
 #' A function to split VEP annotations into columns
 #'
