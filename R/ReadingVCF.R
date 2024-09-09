@@ -43,7 +43,7 @@ process_VCFs <- function(VCFs, ...) {
     VCFs <-
         lapply(VCFs, function(file) {
             counter <<- counter + 1
-            vcf <- process_vcf(file)
+            vcf <- process_vcf(file, ...)
             setTxtProgressBar(pb,counter)
             vcf
         }) %>% bind_rows()

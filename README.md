@@ -16,11 +16,11 @@ Run the full variant processing pipeline
 
 ```r
 ## single file
-process_vcf("path/to/file.vcf")
+process_vcf("path/to/file.vcf", normalPattern = "*normal*")
 ## list of files
-process_VCFs(vector_of_vcfs)
+process_VCFs(vector_of_vcfs, normalPattern = "*normal*")
 ## All the VCF files in a folder
-process_folder("path/to/folder/")
+process_folder("path/to/folder/", normalPattern = "*normal*")
 ```
 
 
