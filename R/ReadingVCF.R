@@ -33,7 +33,7 @@ process_vcf <- function(file, ...) {
 #'
 #' process_VCFs(file)
 
-process_VCFs <- function(VCFs) {
+process_VCFs <- function(VCFs, ...) {
     counter = 0
     print(paste0("Reading variant calls from ", length(VCFs), " files"))
     pb = txtProgressBar(min = 0,
@@ -63,9 +63,9 @@ process_VCFs <- function(VCFs) {
 #'
 #' process_folder(file)
 
-process_folder <- function(folder, pattern = ".annotated.vcf") {
+process_folder <- function(folder, pattern = ".annotated.vcf", ...) {
     VCFs <- list.files(folder, pattern = pattern, full.names = TRUE)
-    process_VCFs(VCFs)
+    process_VCFs(VCFs, ...)
 }
 
 #' A function to read a VCF file whilst removing the header (denoted by the ##)
