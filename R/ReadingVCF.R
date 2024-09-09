@@ -31,12 +31,11 @@ process_vcf <- function(file, ...) {
 #' @export
 #' @examples
 #'
-#' read_VCF(file)
+#' process_VCFs(file)
 
-process_folder <- function(folder, FolderPattern = ".annotated.vcf", ...) {
+process_VCFs <- function(VCFs) {
     counter = 0
-    VCFs <- list.files(folder, pattern = FolderPattern, full.names = TRUE)
-    print(paste0("Reading variant calls from ", length(VCFs), " files in ", folder))
+    print(paste0("Reading variant calls from ", length(VCFs), " files"))
     pb = txtProgressBar(min = 0,
                         max = length(VCFs),
                         initial = 0,
@@ -44,12 +43,29 @@ process_folder <- function(folder, FolderPattern = ".annotated.vcf", ...) {
     VCFs <-
         lapply(VCFs, function(file) {
             counter <<- counter + 1
-            vcf <- process_vcf(file, ...)
+            vcf <- process_vcf(file)
             setTxtProgressBar(pb,counter)
             vcf
         }) %>% bind_rows()
     close(pb)
     VCFs
+}
+
+#' A function read a VCF file removing the header (denoted by the ##)
+#'
+#' @title process_folder
+#' @param file The path to the file to be read
+#' @return A dataframe of the VCF skipping the commented lines
+#' @keywords VCF
+#' @importFrom tibble remove_rownames
+#' @export
+#' @examples
+#'
+#' process_folder(file)
+
+process_folder <- function(folder, pattern = ".annotated.vcf") {
+    VCFs <- list.files(folder, pattern = pattern, full.names = TRUE)
+    process_VCFs(VCFs)
 }
 
 #' A function to read a VCF file whilst removing the header (denoted by the ##)
@@ -87,11 +103,13 @@ read_VCF <- function(file, pass = TRUE, verbose = FALSE, ...) {
             filter(FILTER == "PASS")
     }
     VCF <- set_sample_name(VCF, file, ...)
+    if (verbose) {
+        print("Filtering large structural variants")
+    }
     VCF <- VCF %>%
         filter(! grepl("<.*>", ALT))
     VCF
 }
-
 
 #' A function to process read counts from VCF files
 #'
