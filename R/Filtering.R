@@ -13,7 +13,6 @@
 #' @param returnStats return a filtering summary (default: FALSE)
 #' @param returnPlot return a plot summary of the filtering (default: FALSE)
 #' @param plotStats print a plot summary of the filtering (default: FALSE)
-#' @param printStats print a summary of the filtering (default: FALSE)
 #' @return A dataframe of the filtered VCF (or a plot/overview of the filtering)
 #' @keywords VCF
 #' @importFrom dplyr select arrange
@@ -29,7 +28,8 @@ filter_vars <- function(VCF,
                         returnStats = FALSE,
                         returnPlot = FALSE,
                         plotStats = FALSE,
-                        printStats = FALSE, ...) {
+                        printStats = FALSE,
+                        ...) {
     VCF <- add_filters(VCF, ...)
     Stats <- VCF %>%
         dplyr::select(starts_with("Filter."))
@@ -44,8 +44,7 @@ filter_vars <- function(VCF,
     } else if (returnPlot == TRUE) {
         plot_filters(Stats, ...)
     } else {
-        VCF[Stats %>%
-                rowSums() == ncol(Stats),] %>%
+        VCF[Stats %>% rowSums() == ncol(Stats), ] %>%
             dplyr::select(!starts_with("Filter.")) %>%
             arrange(CHROM, POS, REF, ALT)
     }
@@ -82,13 +81,15 @@ return_filters <- function(biotype = c("protein_coding"),
                            alt.depth = 1,
                            returnDF = FALSE,
                            ...) {
-    filters <- list("biotype" = biotype,
-                    "impact" = impact,
-                    "existing" = existing,
-                    "population" = population,
-                    "vaf" = vaf,
-                    "depth" = depth,
-                    "alt.depth" = alt.depth)
+    filters <- list(
+        "biotype" = biotype,
+        "impact" = impact,
+        "existing" = existing,
+        "population" = population,
+        "vaf" = vaf,
+        "depth" = depth,
+        "alt.depth" = alt.depth
+    )
     if (returnDF == TRUE) {
         filters %>%
             lapply(paste, collapse = ", ") %>%
@@ -116,23 +117,23 @@ return_filters <- function(biotype = c("protein_coding"),
 
 add_filters <- function(VCF, ...) {
     filters = return_filters(...)
-    VCF <- mutate(VCF,
-                  Filter.biotype = BIOTYPE %in% filters$biotype,
-                  Filter.impact = IMPACT %in% filters$impact,
-                  Filter.population = (
-                      (AF_ALL <= filters$population) &
-                          (gnomADe_AF <= filters$population) &
-                          (gnomADg_AF <= filters$population)
-                  ),
-                  Filter.vaf = AF >= filters$vaf,
-                  Filter.depth = DP >= filters$depth,
-                  Filter.alt.depth = ADP >= filters$alt.depth,
+    VCF <- mutate(
+        VCF,
+        Filter.biotype = BIOTYPE %in% filters$biotype,
+        Filter.impact = IMPACT %in% filters$impact,
+        Filter.population = (
+            (AF_ALL <= filters$population) &
+                (gnomADe_AF <= filters$population) &
+                (gnomADg_AF <= filters$population)
+        ),
+        Filter.vaf = AF >= filters$vaf,
+        Filter.depth = DP >= filters$depth,
+        Filter.alt.depth = ADP >= filters$alt.depth,
     )
-    if (filters$existing == TRUE){
+    if (filters$existing == TRUE) {
         VCF <- mutate(VCF,
                       Filter.existing = (!grepl("rs", Existing_variation) |
-                                             grepl("COS", ID))
-        )
+                                             grepl("COS", ID)))
     }
     VCF
 }
@@ -159,10 +160,9 @@ summarise_filters <- function(Stats, ...) {
             setNames("Passing") %>%
             rownames_to_column("Filter") %>%
             mutate(Filter = gsub("Filter.", "", Filter)) %>%
-            left_join(
-                return_filters(returnDF = TRUE, ...),
-                .,
-                by = "Filter"),
+            left_join(return_filters(returnDF = TRUE, ...),
+                      .,
+                      by = "Filter"),
         table(Stats %>% rowSums) %>%
             as.data.frame() %>%
             setNames(c("FiltersPassed", "Variants"))
@@ -189,10 +189,18 @@ plot_filters <- function(Stats, ...) {
     PlotStats$FilterSummary %>%
         ggplot(aes(x = Filter, y = Passing)) +
         geom_col() +
-        geom_text(aes(x = Filter, y = Passing + (max(Passing)/10), label = Passing)) +
+        geom_text(aes(
+            x = Filter,
+            y = Passing + (max(Passing) / 10),
+            label = Passing
+        )) +
         PlotStats$FiltersPassed %>%
         ggplot(aes(x = FiltersPassed, y = Variants)) +
         geom_col() +
-        geom_text(aes(x = FiltersPassed, y = Variants + (max(Variants)/10), label = Variants)) +
+        geom_text(aes(
+            x = FiltersPassed,
+            y = Variants + (max(Variants) / 10),
+            label = Variants
+        )) +
         plot_layout(ncol = 1)
 }
