@@ -4,10 +4,10 @@
 \alias{process_folder}
 \title{process_folder}
 \usage{
-process_folder(folder, pattern = ".annotated.vcf")
+process_folder(folder, pattern = ".annotated.vcf", ...)
 }
 \arguments{
-\item{file}{The path to the file to be read}
+\item{folder}{String containing the path to a folder of VCF files.}
 }
 \value{
 A dataframe of the VCF skipping the commented lines
