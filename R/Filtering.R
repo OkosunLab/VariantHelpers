@@ -173,6 +173,7 @@ summarise_filters <- function(Stats, ...) {
 #'
 #' @title plot_filters
 #' @param Stats The boolean filter columns from the VCF
+#' @param title The title for the plot (default: "")
 #' @return two barplots of the variants that pass each filter and the number of filters passed
 #' @keywords VCF
 #' @importFrom dplyr mutate left_join
@@ -184,7 +185,7 @@ summarise_filters <- function(Stats, ...) {
 #' plot_filters(VCF)
 #'
 
-plot_filters <- function(Stats, ...) {
+plot_filters <- function(Stats, title = "", ...) {
     PlotStats <- summarise_filters(Stats, ...)
     PlotStats$FilterSummary %>%
         ggplot(aes(x = Filter, y = Passing)) +
@@ -194,6 +195,7 @@ plot_filters <- function(Stats, ...) {
             y = Passing + (max(Passing) / 10),
             label = Passing
         )) +
+        labs(title = title) +
         PlotStats$FiltersPassed %>%
         ggplot(aes(x = FiltersPassed, y = Variants)) +
         geom_col() +
