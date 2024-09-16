@@ -175,6 +175,7 @@ split_format <- function(VCF, ...) {
 #' @param VCF the VCF file as a dataframe
 #' @param filename the name of the VCF file
 #' @param sample the sample ID. If NULL this will be determined by the filename (default: NULL)
+#' @param tumourPattern The pattern for the tumour sample ids. Used to rename the tumour sample column to tumour (default: NULL)
 #' @param normalPattern The pattern for the normal sample ids. Used to rename the normal sample column to NORMAL (default: NULL)
 #' @return A dataframe of the tumour counts as columns
 #' @importFrom dplyr mutate rename
@@ -183,9 +184,9 @@ split_format <- function(VCF, ...) {
 #'
 #' @examples
 #'
-#' set_sample_name(VCF, filename, sample = NULL, normalPattern = NULL)
+#' set_sample_name(VCF, filename, tumourPattern = "tumour", normalPattern = "normal")
 
-set_sample_name <- function(VCF, filename, sample = NULL, normalPattern = NULL, ...) {
+set_sample_name <- function(VCF, filename, sample = NULL, tumourPattern = NULL, normalPattern = NULL, ...) {
     if (is.null(sample)) {
         VCF <-
             mutate(
@@ -197,12 +198,19 @@ set_sample_name <- function(VCF, filename, sample = NULL, normalPattern = NULL, 
         VCF <- mutate(VCF, Sample = sample)
     }
     if (! "TUMOR" %in% colnames(VCF)) {
-        tumourCol <- colnames(VCF)[grepl(unique(VCF$Sample), colnames(VCF))]
-        VCF <- rename(VCF, "TUMOR" = tumourCol)
+        if (! is.null(tumourPattern)) {
+            tumourCol <- colnames(VCF)[grepl(tumourPattern, colnames(VCF))]
+            VCF <- rename(VCF, "TUMOR" = tumourCol)
+        } else {
+            tumourCol <- colnames(VCF)[grepl(unique(VCF$Sample), colnames(VCF))]
+            VCF <- rename(VCF, "TUMOR" = tumourCol)
+        }
     }
-    if (! is.null(normalPattern)) {
-        normalCol <- colnames(VCF)[grepl(normalPattern, colnames(VCF))]
-        VCF <- rename(VCF, "NORMAL" = normalCol)
+    if (! "NORMAL" %in% colnames(VCF)) {
+        if (! is.null(normalPattern)) {
+            normalCol <- colnames(VCF)[grepl(normalPattern, colnames(VCF))]
+            VCF <- rename(VCF, "NORMAL" = normalCol)
+        }
     }
     VCF
 }
@@ -271,8 +279,8 @@ split_vep <- function(VCF, header = FALSE, ...) {
             AF_ALL = ifelse(is.na(as.numeric(AF_ALL)), 0, as.numeric(AF_ALL)),
             gnomADe_AF = ifelse(is.na(as.numeric(gnomADe_AF)), 0, as.numeric(gnomADe_AF)),
             gnomADg_AF = ifelse(is.na(as.numeric(gnomADg_AF)), 0, as.numeric(gnomADg_AF))
-            )
-            }
+        )
+}
 
 #' A function to split VEP annotations into columns
 #'
