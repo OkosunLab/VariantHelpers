@@ -1,5 +1,12 @@
 # Variant Helpers
 
+## Contents
+
+1. [Introduction](introduction)
+2. [Filtering](filtering)
+
+## Introduction
+
 An r package containing some functions to assist in the analysis of variant call data.
 
 ##### IMPORTANT NOTE
@@ -54,6 +61,8 @@ VCF <- split_format(VCF, ...)
 ## Get standardised columns for Depth, RDP, ADP, AF
 VCF <- process_counts(file, VCF, ...)
 ```
+
+### Filtering
 
 ### Consensus calling
 
