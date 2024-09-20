@@ -4,12 +4,12 @@
 
 1. [Introduction](#introduction)
 2. [Quickstart](#quickstart)
-  1. [Installation](#installation)
-  2. [Process VCF files](#process-vcf-files)
+    1. [Installation](#installation)
+    2. [Process VCF files](#process-vcf-files)
 3. [Overview](#overview)
-  1. [VCF loading and processing](#vcf-loading-and-processing)
-  2. [Filtering](#filtering)
-  3. [Consensus calling](#Consensus-calling)
+    1. [VCF loading and processing](#vcf-loading-and-processing)
+    2. [Filtering](#filtering)
+    3. [Consensus calling](#Consensus-calling)
 
 ## Introduction
 
