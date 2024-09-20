@@ -48,6 +48,7 @@ remotes::install_github("OkosunLab/VariantHelpers",
 Run the full variant processing pipeline
 
 ```r
+library(VariantHelpers)
 ## single file
 process_vcf("path/to/file.vcf", tumourPattern = "tumour", normalPattern = "normal")
 ## list of files
