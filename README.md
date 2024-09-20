@@ -2,6 +2,17 @@
 
 An r package containing some functions to assist in the analysis of variant call data.
 
+##### IMPORTANT NOTE
+
+I have been getting an issue with running this packages recently through the ondemand implementation of R studio on Apocrita getting the following error:
+
+```r
+Error in base::suppressWarnings(base::try("_", silent = TRUE))
+  invalid use of pipe placeholder (<input>:1:0)
+```
+
+if you get this try turning of R diagnostics - this seems to be an issue with this: https://github.com/rstudio/rstudio/issues/14713
+
 ## Quickstart
 
 ### Installation
