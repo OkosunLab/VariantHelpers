@@ -3,7 +3,13 @@
 ## Contents
 
 1. [Introduction](#introduction)
-2. [Filtering](#filtering)
+2. [Quickstart](#quickstart)
+  1. [Installation](#installation)
+  2. [Process VCF files](#process-vcf-files)
+3. [Overview](#overview)
+  1. [VCF loading and processing](#vcf-loading-and-processing)
+  2. [Filtering](#filtering)
+  3. [Consensus calling](#Consensus-calling)
 
 ## Introduction
 
@@ -28,7 +34,7 @@ if you get this try turning of R diagnostics - this seems to be an issue with th
 remotes::install.github("OkosunLab/VatiantHelpers")
 ```
 
-### Process vcf files
+### Process VCF files
 
 Run the full variant processing pipeline
 
