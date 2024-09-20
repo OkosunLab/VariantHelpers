@@ -15,7 +15,7 @@
 
 An r package containing some functions to assist in the analysis of variant call data.
 
-##### IMPORTANT NOTE
+***IMPORTANT NOTE***
 
 I have been getting an issue with running this packages recently through the ondemand implementation of R studio on Apocrita getting the following error:
 
@@ -30,8 +30,17 @@ if you get this try turning of R diagnostics - this seems to be an issue with th
 
 ### Installation
 
+To install the package you can use the following:
+
 ```r
 remotes::install.github("OkosunLab/VatiantHelpers")
+```
+
+However the package is currently private so you need to provide github some credentials to be able to download the package. The simplest way to do this is to generate a ghg keey for your account and pass it in the install call:
+
+```r
+remotes::install_github("OkosunLab/VariantHelpers",
+                            auth_token = "ghg_yourkeygoeshere")
 ```
 
 ### Process VCF files
