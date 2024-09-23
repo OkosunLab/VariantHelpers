@@ -4,7 +4,7 @@
 #' @param VCF the VCF file process through the pipeline
 #' @param biotype A vector of biotypes to select (default: c("protein_coding"))
 #' @param impact A vector of biotypes to select (default: c("HIGH", "MODERATE"))
-#' @param existing bool of wether to filter by dbSNP/COSMIC (default: FALSE)
+#' @param existing bool of whether to filter by dbSNP/COSMIC (default: FALSE)
 #' @param population numeric value to filter 1000g/gnomAD (default: 0.01)
 #' @param vaf numeric value to filter vaf (default: 0)
 #' @param depth numeric value to filter depth (default: 1)
