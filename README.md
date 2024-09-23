@@ -108,7 +108,7 @@ alt.depth | 1 | minimum number of reads for the alternative allele
 You can plot some summaries of variant filtering using the argument plotStats = TRUE, you can also return the plot objects or the underliying stats using returnPlots = TRUE or returnStats = TRUE
 
 ```r
-filter_vars(VCF, plotStats = TRUE)
+VCF.filtered <- filter_vars(VCF, plotStats = TRUE)
 plots <- filter_vars(VCF, returnPlots = TRUE)
 stats <- filter_vars(VCF, returnStats = TRUE)
 ```
