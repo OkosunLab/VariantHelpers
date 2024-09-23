@@ -80,6 +80,39 @@ VCF <- process_counts(file, VCF, ...)
 
 ### Filtering
 
+The resulting VCF files are just standard dataframes so you can filter them like normal. You can however use the filter_vars function to quickly apply some standard filters.
+
+```r
+## Test the default filters and see how it affects the data
+filter_vars(VCF, plotStats = TRUE)
+## Apply the default filters
+filter_vars(VCF)
+## set custom filters
+filter_vars(VCF, vaf = 0.25, depth = 100, alt.depth = 10)
+```
+
+There are several filters that can be applied using this function
+
+Argument | Default | Notes
+--- | --- | ---
+biotype | c("protein_coding") | [The type of feature the annotation is refering to](https://www.ensembl.org/info/genome/genebuild/biotypes.html)
+impact | c("HIGH", "MODERATE") | [High and Moderate retain the non-synonymous variants](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html)
+existing | FALSE | If TRUE then any variants that have an rs ID (from dbSNP) also need to have a COSMIC ID in the ID column
+population | 0.01 | max frequency in 1000g and GnomAD
+vaf | 0 | Tumour allele frequency
+depth | 1 | minimum depth of coverage at position
+alt.depth | 1 | minimum number of reads for the alternative allele
+
+#### Filter preview
+
+You can plot some summaries of variant filtering using the argument plotStats = TRUE, you can also return the plot objects or the underliying stats using returnPlots = TRUE or returnStats = TRUE
+
+```r
+filter_vars(VCF, plotStats = TRUE)
+plots <- filter_vars(VCF, returnPlots = TRUE)
+stats <- filter_vars(VCF, returnStats = TRUE)
+```
+
 ### Consensus calling
 
 When using multiple variant callers you can take the consensus of the calls from the different callers to filter out potential false calls.
