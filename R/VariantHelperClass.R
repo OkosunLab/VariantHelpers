@@ -106,11 +106,15 @@ update_stats <- function(object, ...) {
 #' filter_variants(obj, vaf = 0.5)
 
 filter_variants <- function(object, ...) {
-    object@Callers <- lapply(object@Callers, function(obj) {
+    filters <- lapply(object@Callers, function(obj) {
         filter_vars(obj, ...)
     })
-    object <- update_stats(object, ...)
-    return(object)
+    if (typeof(filters) == "S4") {
+        object <- update_stats(object, ...)
+        return(object)
+    } else {
+        return(filters)
+    }
 }
 
 #' A function to update the stats held by the object
