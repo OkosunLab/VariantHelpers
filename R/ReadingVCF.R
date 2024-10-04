@@ -77,6 +77,7 @@ process_folder <- function(folder, pattern = ".annotated.vcf", ...) {
 #' @title read_VCF
 #' @param file The path to the file to be read
 #' @param pass whether to filter out non PASS variants (default: TRUE)
+#' @param pick whether to filter out the annotations that weren't picked (default: TRUE)
 #' @param verbose print out extra text for debugging (verbose: FALSE)
 #' @return A dataframe of the VCF skipping the commented lines
 #' @keywords VCF
@@ -88,7 +89,7 @@ process_folder <- function(folder, pattern = ".annotated.vcf", ...) {
 #'
 #' read_VCF(file)
 
-read_VCF <- function(file, pass = TRUE, verbose = FALSE, ...) {
+read_VCF <- function(file, pass = TRUE, pick = TRUE, verbose = FALSE, ...) {
     if (verbose) {
         print(paste0("Reading file ", file))
     }
@@ -105,6 +106,13 @@ read_VCF <- function(file, pass = TRUE, verbose = FALSE, ...) {
         }
         VCF <- VCF %>%
             filter(FILTER == "PASS")
+    }
+    if (pick) {
+        if (verbose) {
+            print("Filtering variants by PICK")
+        }
+        VCF <- VCF %>%
+            filter(PICK == "1")
     }
     VCF <- set_sample_name(VCF, file, ...)
     if (verbose) {

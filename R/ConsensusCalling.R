@@ -11,7 +11,9 @@
 #'
 #' upset_by_caller(obj)
 
-upset_by_caller <- function(object, category = Sample, colours = NULL, ...) {
+upset_by_caller <- function(object,
+                            category = Sample,
+                            colours = NULL, ...) {
     if (is.null(colours)) {
         s.colour <- scale_fill_discrete(guide = "none")
     } else {
