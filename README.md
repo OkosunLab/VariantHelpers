@@ -97,7 +97,7 @@ Argument | Default | Notes
 --- | --- | ---
 biotype | c("protein_coding") | [The type of feature the annotation is refering to](https://www.ensembl.org/info/genome/genebuild/biotypes.html)
 impact | c("HIGH", "MODERATE") | [High and Moderate retain the non-synonymous variants](https://www.ensembl.org/info/genome/variation/prediction/predicted_data.html)
-existing | FALSE | If TRUE then any variants that have an rs ID (from dbSNP) also need to have a COSMIC ID in the ID column
+existing | TRUE | If TRUE then any variants that have an rs ID (from dbSNP) also need to have a COSMIC ID in the ID column
 population | 0.01 | max frequency in 1000g and GnomAD
 vaf | 0 | Tumour allele frequency
 depth | 1 | minimum depth of coverage at position
