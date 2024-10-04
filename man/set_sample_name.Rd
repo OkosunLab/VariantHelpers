@@ -4,7 +4,14 @@
 \alias{set_sample_name}
 \title{set_sample_name}
 \usage{
-set_sample_name(VCF, filename, sample = NULL, normalPattern = NULL, ...)
+set_sample_name(
+  VCF,
+  filename,
+  sample = NULL,
+  tumourPattern = NULL,
+  normalPattern = NULL,
+  ...
+)
 }
 \arguments{
 \item{VCF}{the VCF file as a dataframe}
@@ -12,6 +19,8 @@ set_sample_name(VCF, filename, sample = NULL, normalPattern = NULL, ...)
 \item{filename}{the name of the VCF file}
 
 \item{sample}{the sample ID. If NULL this will be determined by the filename (default: NULL)}
+
+\item{tumourPattern}{The pattern for the tumour sample ids. Used to rename the tumour sample column to tumour (default: NULL)}
 
 \item{normalPattern}{The pattern for the normal sample ids. Used to rename the normal sample column to NORMAL (default: NULL)}
 }
@@ -23,6 +32,6 @@ A function to determine the sample name and change to columns for the tumour and
 }
 \examples{
 
-set_sample_name(VCF, filename, sample = NULL, normalPattern = NULL)
+set_sample_name(VCF, filename, tumourPattern = "tumour", normalPattern = "normal")
 }
 \keyword{VCF}

@@ -22,13 +22,11 @@ filter_vars(
 
 \item{plotStats}{print a plot summary of the filtering (default: FALSE)}
 
-\item{printStats}{print a summary of the filtering (default: FALSE)}
-
 \item{biotype}{A vector of biotypes to select (default: c("protein_coding"))}
 
 \item{impact}{A vector of biotypes to select (default: c("HIGH", "MODERATE"))}
 
-\item{existing}{bool of wether to filter by dbSNP/COSMIC (default: FALSE)}
+\item{existing}{bool of whether to filter by dbSNP/COSMIC (default: TRUE)}
 
 \item{population}{numeric value to filter 1000g/gnomAD (default: 0.01)}
 

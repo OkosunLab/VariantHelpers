@@ -4,10 +4,12 @@
 \alias{plot_filters}
 \title{plot_filters}
 \usage{
-plot_filters(Stats, ...)
+plot_filters(Stats, title = "", ...)
 }
 \arguments{
 \item{Stats}{The boolean filter columns from the VCF}
+
+\item{title}{The title for the plot (default: "")}
 }
 \value{
 two barplots of the variants that pass each filter and the number of filters passed

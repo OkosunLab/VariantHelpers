@@ -21,7 +21,7 @@ return_filters(
 
 \item{impact}{A vector of biotypes to select (default: c("HIGH", "MODERATE"))}
 
-\item{existing}{bool of wether to filter by dbSNP/COSMIC (default: FALSE)}
+\item{existing}{bool of wether to filter by dbSNP/COSMIC (default: TRUE)}
 
 \item{population}{numeric value to filter 1000g/gnomAD (default: 0.01)}
 
