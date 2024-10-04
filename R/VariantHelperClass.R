@@ -88,36 +88,7 @@ update_stats <- function(object, ...) {
     return(object)
 }
 
-#' A wrapper to filter all VCFs loaded in obj@Callers
-#'
-#' @title update_stats
-#' @param biotype A vector of biotypes to select (default: c("protein_coding"))
-#' @param impact A vector of biotypes to select (default: c("HIGH", "MODERATE"))
-#' @param existing bool of whether to filter by dbSNP/COSMIC (default: TRUE)
-#' @param population numeric value to filter 1000g/gnomAD (default: 0.01)
-#' @param vaf numeric value to filter vaf (default: 0)
-#' @param depth numeric value to filter depth (default: 1)
-#' @param alt.depth numeric value to filter alt allele depth (default: 1)
-#' @return object of class VariantHelper with filters applied
-#' @keywords VCF
-#' @export
-#' @examples
-#'
-#' filter_variants(obj, vaf = 0.5)
-
-filter_variants <- function(object, ...) {
-    filters <- lapply(object@Callers, function(obj) {
-        filter_vars(obj, ...)
-    })
-    if (typeof(filters) == "S4") {
-        object <- update_stats(object, ...)
-        return(object)
-    } else {
-        return(filters)
-    }
-}
-
-#' A function to update the stats held by the object
+#' A function to add metadata to the object
 #'
 #' @title add_metadata
 #' @return object of class VariantHelper with metadata added
