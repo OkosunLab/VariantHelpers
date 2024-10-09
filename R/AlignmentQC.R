@@ -62,13 +62,3 @@ plot_depth_qc <- function(depth = NULL, category = Sample, ...) {
         labs(y = "Mean Base Coverage", fill = "Origin")
 }
 
- +
-    plot_layout(guides = "collect", ncol = 1) +
-    expand_limits(y = 0) +
-    ggplot(Depth,aes(y = mean, x = Patient, fill = Patient)) +
-    geom_col() +
-    facet_wrap(~factor(Type, levels=c("CSF", "PB", "Tumour", "Normal")),
-               scales = "free_y", ncol = 1) +
-    scale_fill_manual(values = ClinicalColours$Patient) +
-    plot_layout(heights = c(1,1,4)) +
-    scale_x_discrete(guide = guide_axis(angle = 45))
