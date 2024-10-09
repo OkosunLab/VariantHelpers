@@ -231,7 +231,7 @@ set_sample_name <- function(VCF, filename, sample = NULL, tumourPattern = NULL, 
 #'
 #' split_vep(VCF, header = FALSE)
 
-split_vep <- function(VCF, header = FALSE, pick = TRUE, ...) {
+split_vep <- function(VCF, header = FALSE, pick = TRUE, verbose = FALSE, ...) {
     if (header == FALSE) {
         ## This is the headings that should come out of the snakemake pipeline
         header = c("Consequence", "IMPACT", "SYMBOL", "Gene", "Feature_type",
