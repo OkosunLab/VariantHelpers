@@ -272,8 +272,9 @@ split_vep <- function(VCF, header = FALSE, pick = TRUE, verbose = FALSE, ...) {
         cbind(Row %>% t(),
               INFO.Trim = paste(SplitRow[c(1:(length(SplitRow) %% length(header)))],
                                 collapse = "|"),
-              VEP
-    }) %>% bind_rows() %>%
+              VEP)
+    }) %>%
+            bind_rows() %>%
         ## AF is the 1000 genomes total pop frequency, so rename this
         rename("AF_ALL" = "AF") %>%
         mutate(
