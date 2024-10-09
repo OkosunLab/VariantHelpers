@@ -42,7 +42,7 @@ setMethod("show", "VariantHelper",
 
 variant_helper_from_folder_paths <- function(paths, ...) {
     Calls <- lapply(paths, function(path) {
-        process_folder(path)
+        process_folder(path, ...)
     }) %>%
         setNames(names(paths))
     rv <- variant_helper_from_list_of_calls(Calls, ...)
