@@ -89,7 +89,7 @@ process_folder <- function(folder, pattern = ".annotated.vcf", ...) {
 #'
 #' read_VCF(file)
 
-read_VCF <- function(file, pass = TRUE, pick = TRUE, verbose = FALSE, ...) {
+read_VCF <- function(file, pass = TRUE, verbose = FALSE, ...) {
     if (verbose) {
         print(paste0("Reading file ", file))
     }
@@ -106,13 +106,6 @@ read_VCF <- function(file, pass = TRUE, pick = TRUE, verbose = FALSE, ...) {
         }
         VCF <- VCF %>%
             filter(FILTER == "PASS")
-    }
-    if (pick) {
-        if (verbose) {
-            print("Filtering variants by PICK")
-        }
-        VCF <- VCF %>%
-            filter(PICK == "1")
     }
     VCF <- set_sample_name(VCF, file, ...)
     if (verbose) {
@@ -238,7 +231,7 @@ set_sample_name <- function(VCF, filename, sample = NULL, tumourPattern = NULL, 
 #'
 #' split_vep(VCF, header = FALSE)
 
-split_vep <- function(VCF, header = FALSE, ...) {
+split_vep <- function(VCF, header = FALSE, pick = TRUE, ...) {
     if (header == FALSE) {
         ## This is the headings that should come out of the snakemake pipeline
         header = c("Consequence", "IMPACT", "SYMBOL", "Gene", "Feature_type",
@@ -262,7 +255,7 @@ split_vep <- function(VCF, header = FALSE, ...) {
                    "MOTIF_SCORE_CHANGE", "TRANSCRIPTION_FACTORS", "LoFtool")
     }
     ## Iterate over the rows
-    apply(VCF, 1, function(Row) {
+    VCF <- apply(VCF, 1, function(Row) {
         ## Split INFO by |
         SplitRow <- Row[["INFO"]] %>% str_split_1(pattern = "\\|")
         ## Remove the columns you expect from the caller
@@ -288,6 +281,14 @@ split_vep <- function(VCF, header = FALSE, ...) {
             gnomADe_AF = ifelse(is.na(as.numeric(gnomADe_AF)), 0, as.numeric(gnomADe_AF)),
             gnomADg_AF = ifelse(is.na(as.numeric(gnomADg_AF)), 0, as.numeric(gnomADg_AF))
         )
+    if (pick) {
+        if (verbose) {
+            print("Filtering variants by PICK")
+        }
+        VCF <- VCF %>%
+            filter(PICK == "1")
+    }
+    VCF
 }
 
 #' A function to split VEP annotations into columns
