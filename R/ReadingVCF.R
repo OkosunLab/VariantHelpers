@@ -272,7 +272,7 @@ split_vep <- function(VCF, header = FALSE, pick = TRUE, verbose = FALSE, ...) {
         cbind(Row %>% t(),
               INFO.Trim = paste(SplitRow[c(1:(length(SplitRow) %% length(header)))],
                                 collapse = "|"),
-              VEP)
+              VEP
     }) %>% bind_rows() %>%
         ## AF is the 1000 genomes total pop frequency, so rename this
         rename("AF_ALL" = "AF") %>%
@@ -358,10 +358,14 @@ process_Strelka2 <- function(VCF, ...) {
 #'
 #' process_Varscan2(row)
 
-process_Varscan2 <- function(VCF, sample = NULL, ...) {
+process_Varscan2 <- function(VCF, sample = NULL, tumourOnly = FALSE, ...) {
+
+    if (! tumourOnly ) {
+        VCF <- VCF %>%
+            ## SS=2 in INFO retains the SOMATIC variants
+            filter(grepl("SS=2", INFO))
+    }
     VCF <- VCF %>%
-        ## SS=2 in INFO retains the SOMATIC variants
-        filter(grepl("SS=2", INFO)) %>%
         mutate(RDP = as.numeric(RD),
                ADP = as.numeric(AD),
                DP = as.numeric(DP),
@@ -408,14 +412,16 @@ process_Mutect2 <- function(VCF, ...) {
 #'
 #' process_VarDict(row)
 
-process_VarDict <- function(VCF, ...) {
+process_VarDict <- function(VCF, tumourOnly = FALSE, ...) {
     VCF <- VCF %>%
         separate(AD, into = c("RDP", "ADP"), sep = ",") %>%
         mutate(DP = as.numeric(DP),
                RDP = as.numeric(RDP),
                ADP = as.numeric(ADP),
                AF = as.numeric(AF)) %>%
-        filter(grepl("STATUS=.*Somatic", INFO)) %>%
         mutate(POS = as.numeric(POS))
+    if ( ! tumourOnly ) {
+        VCF <- filter(VCF, grepl("STATUS=.*Somatic", INFO))
+    }
     VCF
 }
