@@ -4,7 +4,7 @@
 \alias{process_Varscan2}
 \title{process_Varscan2}
 \usage{
-process_Varscan2(VCF, sample = NULL, ...)
+process_Varscan2(VCF, sample = NULL, tumourOnly = FALSE, ...)
 }
 \arguments{
 \item{VCF}{a dataframe of VCF records from Varscan2 with the TUMOR columns separated}

@@ -231,6 +231,7 @@ filter_variants <- function(object, ...) {
     if (is.ggplot(filters[[1]])) {
         return(filters)
     } else {
+        object@Callers <- filters
         object <- update_stats(object, ...)
         return(object)
     }

@@ -1,3 +1,4 @@
+#' @description
 #' A function fully process the VCF through the pipeline.
 #'
 #' @title process_vcf
@@ -21,6 +22,7 @@ process_vcf <- function(file, ...) {
     VCF <- process_counts(file, VCF, ...)
 }
 
+#' @description
 #' A function to process a vector of VCF files
 #'
 #' @title process_VCFs
@@ -55,11 +57,12 @@ process_VCFs <- function(VCFs, JoinAll = TRUE, ...) {
     VCFs
 }
 
+#' @description
 #' A function read a VCF file removing the header (denoted by the ##)
 #'
 #' @title process_folder
 #' @param folder String containing the path to a folder of VCF files.
-#' @return A dataframe of the VCF skipping the commented lines
+#' @return a dataframe of processed variants from all files in a folder.
 #' @keywords VCF
 #' @importFrom tibble remove_rownames
 #' @export

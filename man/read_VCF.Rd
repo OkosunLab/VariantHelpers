@@ -12,6 +12,8 @@ read_VCF(file, pass = TRUE, verbose = FALSE, ...)
 \item{pass}{whether to filter out non PASS variants (default: TRUE)}
 
 \item{verbose}{print out extra text for debugging (verbose: FALSE)}
+
+\item{pick}{whether to filter out the annotations that weren't picked (default: TRUE)}
 }
 \value{
 A dataframe of the VCF skipping the commented lines

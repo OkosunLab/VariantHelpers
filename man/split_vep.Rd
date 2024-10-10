@@ -4,7 +4,7 @@
 \alias{split_vep}
 \title{split_vep}
 \usage{
-split_vep(VCF, header = FALSE, ...)
+split_vep(VCF, header = FALSE, pick = TRUE, verbose = FALSE, ...)
 }
 \arguments{
 \item{VCF}{the VCF file as a dataframe}

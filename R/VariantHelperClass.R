@@ -155,6 +155,7 @@ combine_calls <- function(object, ...) {
 #' @return ggplot of the number of variants.
 #' @param object object of class VariantHelper
 #' @param category name of a column in the metadata (default: Sample)
+#' @import ggplot2
 #' @keywords VCF
 #' @export
 #' @examples
@@ -176,6 +177,7 @@ variants_by_caller <- function(object, category = Sample, ...) {
 #' @param object object of class VariantHelper
 #' @param category name of a column in the metadata (default: Sample)
 #' @keywords VCF
+#' @import ggplot2
 #' @export
 #' @examples
 #'

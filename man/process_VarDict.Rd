@@ -4,7 +4,7 @@
 \alias{process_VarDict}
 \title{process_VarDict}
 \usage{
-process_VarDict(VCF, ...)
+process_VarDict(VCF, tumourOnly = FALSE, ...)
 }
 \arguments{
 \item{VCF}{a dataframe of VCF records from VarDict with the TUMOR columns separated}

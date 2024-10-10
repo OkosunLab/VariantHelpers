@@ -13,7 +13,7 @@ add_metadata(object, metadata, ...)
 object of class VariantHelper with metadata added
 }
 \description{
-A function to update the stats held by the object
+A function to add metadata to the object
 }
 \examples{
 

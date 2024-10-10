@@ -33,14 +33,14 @@ load_depth_qc <-
         depth
     }
 
-#' A function to load the depth information from the Okosun lab alignment snakemake pipelines (or anything that uses GATK DepthOfCoverage)
+#' A function to plot the depth information
 #'
 #' @title filter_vars
 #' @param depth dataframe of depth of coverage statistics. If NULL will try to load data using load_depth_qc (default: NULL)
 #' @param category column in depth to use for plotting
 #' @return A ggplot object
 #' @keywords VCF
-#' @import ggplot
+#' @import ggplot2
 #' @import patchwork
 #' @export
 #' @examples

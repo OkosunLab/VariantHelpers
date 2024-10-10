@@ -4,7 +4,7 @@
 \alias{variant_helper_from_folder_paths}
 \title{variant_helper_from_folder_paths}
 \usage{
-variant_helper_from_folder_paths(paths)
+variant_helper_from_folder_paths(paths, ...)
 }
 \arguments{
 \item{paths}{a vector of paths to folders containing VCF files}

@@ -10,7 +10,7 @@ process_folder(folder, pattern = ".annotated.vcf", ...)
 \item{folder}{String containing the path to a folder of VCF files.}
 }
 \value{
-A dataframe of the VCF skipping the commented lines
+a dataframe of processed variants from all files in a folder.
 }
 \description{
 A function read a VCF file removing the header (denoted by the ##)
