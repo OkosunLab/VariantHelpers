@@ -20,7 +20,7 @@ upset_by_caller <- function(object,
         s.colour <- scale_fill_manual(values = colours, guide = "none")
     }
     combine_calls(object, ...) %>%
-        dplyr::select(varID, Caller, {{category}}, Consequence) %>%
+        dplyr::select(varID, Caller, Sample, {{category}}, Consequence) %>%
         mutate(values = as.integer(1)) %>%
         pivot_wider(
             names_from = Caller,
