@@ -1,6 +1,23 @@
 #' @description
 #' A function fully process the VCF through the pipeline.
 #'
+#' @title test
+#' @param file The path to the file to be read
+#' @return A dataframe of the VCF skipping the commented lines
+#' @keywords VCF
+#' @importFrom tibble remove_rownames
+#' @export
+#' @examples
+#'
+#' test(file)
+
+test <- function(){
+    print("hello world")
+}
+
+#' @description
+#' A function fully process the VCF through the pipeline.
+#'
 #' @title process_vcf
 #' @param file The path to the file to be read
 #' @return A dataframe of the VCF skipping the commented lines
