@@ -170,6 +170,7 @@ add_summary <- function(object, ...) {
 #' @param FUN function to use for the summary (default: mean)
 #' @param min_caller minimum number of callers needed to retain variant (default: 3)
 #' @keywords VCF
+#' @importFrom dplyr rename
 #' @export
 #' @examples
 #'
@@ -180,5 +181,5 @@ stat_summary <- function(object, category = Sample, stat = AF, FUN = mean, ...){
     combine_calls(object) %>%
         group_by(varID, {{category}}) %>%
         summarise(stat = FUN({{stat}}),.groups = "keep") %>%
-        rename("stat" = name)
+        dplyr::rename(!!name := "stat")
 }
