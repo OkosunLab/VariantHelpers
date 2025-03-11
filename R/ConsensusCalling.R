@@ -87,7 +87,7 @@ add_consensus <- function(object, min_caller = 3, ...) {
         dplyr::select(-any_of(
             c(
                 .$FORMAT %>% unique() %>% lapply(str_split_1, ":") %>% unlist() %>% unique(),
-                "INFO", "INFO.Trim", "FORMAT", "NORMAL", "AF", "RDP", "ADP"
+                "QUAL","INFO", "INFO.Trim", "FORMAT", "NORMAL", "AF", "RDP", "ADP"
             )
         )) %>%
         mutate(value = 1) %>%
