@@ -191,3 +191,41 @@ stats_by_caller <- function(object, Stat = AF,  category = Sample, ...) {
         facet_wrap(~Caller) +
         theme_classic()
 }
+
+#' A function to combine two instances of VariantHelper
+#'
+#' @title combine_objects
+#' @return combined object of class VariantHelper
+#' @param obj object of class VariantHelper
+#' @param obj2 object of class VariantHelper
+#' @keywords VCF
+#' @importFrom dplyr bind_rows
+#' @export
+#' @examples
+#'
+#' combine_objects(obj, obj2)
+
+combine_objects <- function(obj, obj2) {
+    rv <- obj
+    rv@Consensus <- bind_rows(obj@Consensus,
+                              obj2@Consensus)
+    if (sum(duplicated(rv@Consensus)) > 0) {
+        stop("Duplicated variants in Consensus")
+    }
+    callers <- unique(c(names(WES@Callers), names(WES.TO@Callers)))
+    rv@Callers <- lapply(callers, function(caller) {
+        rv <- dplyr::bind_rows(obj@Callers[[caller]],
+                        obj2@Callers[[caller]])
+        if (sum(duplicated(rv)) > 0) {
+            stop(paste("Duplicated variants in", caller))
+        }
+        rv
+    }) %>% setNames(callers)
+    rv@meta.data <- dplyr::bind_rows(obj@meta.data,
+                              obj2@meta.data)
+    if (sum(duplicated(rv@meta.data)) > 0) {
+        stop("Duplicated variants in Consensus")
+    }
+    rv <- update_stats(rv)
+    rv
+}
