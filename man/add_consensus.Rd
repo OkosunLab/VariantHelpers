@@ -4,12 +4,14 @@
 \alias{add_consensus}
 \title{add_consensus}
 \usage{
-add_consensus(object, min_caller = 3, ...)
+add_consensus(object, min_caller = 3, remove_cols = c(""), ...)
 }
 \arguments{
 \item{object}{object of class VariantHelper}
 
 \item{min_caller}{minimum number of callers needed to retain variant (default: 3)}
+
+\item{remove_cols}{character vector of columns to remove}
 }
 \value{
 object of class VariantHelper with the consensus calls in the consensus slot.

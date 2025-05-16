@@ -73,13 +73,14 @@ count_vars_by_caller_sample <- function(object, category = Sample, ...) {
 #' @return object of class VariantHelper with the consensus calls in the consensus slot.
 #' @param object object of class VariantHelper
 #' @param min_caller minimum number of callers needed to retain variant (default: 3)
+#' @param remove_cols character vector of columns to remove
 #' @keywords VCF
 #' @export
 #' @examples
 #'
 #' add_consensus(obj)
 
-add_consensus <- function(object, min_caller = 3, ...) {
+add_consensus <- function(object, min_caller = 3, remove_cols = c(""), ...) {
     consensusCalls <- count_vars_by_caller_sample(object, ...) %>%
         filter(n >= min_caller)
     object@Consensus <-
@@ -87,7 +88,8 @@ add_consensus <- function(object, min_caller = 3, ...) {
         dplyr::select(-any_of(
             c(
                 .$FORMAT %>% unique() %>% lapply(str_split_1, ":") %>% unlist() %>% unique(),
-                "QUAL","INFO", "INFO.Trim", "FORMAT", "NORMAL", "AF", "RDP", "ADP"
+                "QUAL","INFO", "INFO.Trim", "FORMAT", "NORMAL", "AF", "RDP", "ADP", "RDF", "RDR", "ADF","ADR",
+                remove_cols
             )
         )) %>%
         mutate(value = 1) %>%
