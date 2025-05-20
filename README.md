@@ -113,6 +113,26 @@ plots <- filter_vars(VCF, returnPlots = TRUE)
 stats <- filter_vars(VCF, returnStats = TRUE)
 ```
 
+### Per caller plots
+
+Prior to generating consensus calls you can take a look at the data across the callers.
+
+You can see the number of calls per sample per caller using the command below
+
+```r
+## Plot the variants called by each vartiant caller.
+variants_by_caller(VCF, category = Sample)
+```
+
+You can generate plots of the numerical columns (e.g. AF, DP, ADP) using the below
+
+```r
+## compare the AF profile across callers
+stats_by_caller(TIER, category = Patient, Stat = AF)
+```
+
+This can let you check for caller specific issues with your variant calling.
+
 ### Consensus calling
 
 When using multiple variant callers you can take the consensus of the calls from the different callers to filter out potential false calls.
@@ -123,6 +143,27 @@ Upset plots are a better way of comparing the overlap of multiple groups than Ve
 
 Upset graphs allow for a much better visualization of things shared between groups
 
+```r
+upset_by_caller(object = VCF, 
+                category = Sample)
+## You can specify the colours using a vector
+upset_by_caller(object = VCF, 
+                category = Sample,
+                colours = c("vector", "of", "colours"))
+## Even better - you can set up a named vector and use that throughout your code to standardise colours
+sample_cols <- c("Sample1" = "#F48565", "Sample2" = "#85F465", "Sample3" = "#8565F4")
+upset_by_caller(object = VCF, 
+                category = Sample,
+                colours = sample_cols)
+```
 
+#### Creating a consensus list of variants
 
+Looking at the upset plot will give you a decent idea of how many callers to accept.
 
+If you want to be really strict you can take only variants called by ALL of the callers you have used, or you could be very lax and use variants called by all tools. 
+
+```r
+## Add the consensus calls to the consensus slot
+VCF <- add_consensus(VCF, min_caller = 1)
+```
