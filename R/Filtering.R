@@ -237,3 +237,56 @@ filter_variants <- function(object, ...) {
     }
 }
 
+## Recurrent variant calls
+
+#' Find variant positions that occur across several samples
+#'
+#' @title return_recurrent_vars
+#' @return data frame of variants and the number of times they are called.
+#' @param obj an object of type VariantHelper
+#' @param limit threshold for calling a variant recurrent (default: 1)
+#' @keywords VCF
+#' @export
+#' @importFrom dplyr group_by summarise
+#' @examples
+#'
+#' return_recurrent_vars(obj)
+
+return_recurrent_vars <- function(obj, limit = 1, ...) {
+    return_consensus(obj) %>%
+        group_by(CHROM, POS, REF, ALT, SYMBOL, ID) %>%
+        summarise(n = n()) %>%
+        subset(n > limit)
+}
+
+## Plot recurrent variant calls
+
+#' Plot out variants that occur more than once
+#'
+#' @title plot_recurrent_vars
+#' @return ggplot of recurrent variant positions
+#' @param obj an object of type VariantHelper (default: NULL)
+#' @keywords VCF
+#' @importFrom dplyr group_by summarise
+#' @export
+#' @examples
+#'
+#' return_recurrent_vars(obj)
+
+plot_recurrent_vars <- function(obj = NULL, df = NULL, ...) {
+    if (! is.null(obj) & is.null(df)) {
+        df <- return_recurrent_vars(obj, ...)
+    }
+    df %>%
+        ggplot(aes(y = n, x = paste(POS, SYMBOL), fill = ID != ".") ) +
+        geom_col() +
+        guides(x = ggh4x::guide_axis_nested(delim = " ", angle = 90)) +
+        theme(ggh4x.axis.nesttext.x =
+                  element_text(angle = 90, hjust = 1, vjust = 0.5)
+        ) +
+        labs(fill = "Has COSMIC ID", x = "Variant Position")
+}
+
+
+
+

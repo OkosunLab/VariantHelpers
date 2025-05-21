@@ -375,6 +375,16 @@ process_Varscan2 <- function(VCF, sample = NULL, tumourOnly = FALSE, ...) {
                DP = as.numeric(DP),
                AF = ADP/DP) %>%
         mutate(POS = as.numeric(POS))
+    if (! tumourOnly) {
+        VCF <- VCF %>%
+            separate("DP4", c("RDF", "RDR", "ADF", "ADR"), convert = TRUE)
+    } else if (tumourOnly) {
+        VCF <- VCF %>%
+            mutate(RDF = as.numeric(RDF),
+                   RDR = as.numeric(RDR),
+                   ADF = as.numeric(ADF),
+                   ADR = as.numeric(ADR))
+    }
     VCF
 }
 
@@ -399,7 +409,8 @@ process_Mutect2 <- function(VCF, ...) {
                RDP = as.numeric(RDP),
                ADP = as.numeric(ADP),
                AF = as.numeric(AF)) %>%
-        mutate(POS = as.numeric(POS))
+        mutate(POS = as.numeric(POS)) %>%
+        separate("SB", c("RDF", "RDR", "ADF", "ADR"), convert = TRUE)
     VCF
 }
 
@@ -423,7 +434,9 @@ process_VarDict <- function(VCF, tumourOnly = FALSE, ...) {
                RDP = as.numeric(RDP),
                ADP = as.numeric(ADP),
                AF = as.numeric(AF)) %>%
-        mutate(POS = as.numeric(POS))
+        mutate(POS = as.numeric(POS)) %>%
+        separate("RD", c("RDF", "RDR"), convert = TRUE) %>%
+        separate("ALD", c("ADF", "ADR"), convert = TRUE)
     if ( ! tumourOnly ) {
         VCF <- filter(VCF, grepl("STATUS=.*Somatic", INFO))
     }
