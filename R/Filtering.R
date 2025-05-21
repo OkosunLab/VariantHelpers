@@ -267,7 +267,7 @@ return_recurrent_vars <- function(obj, limit = 1, ...) {
 #' @return ggplot of recurrent variant positions
 #' @param obj an object of type VariantHelper (default: NULL)
 #' @keywords VCF
-#' @importFrom dplyr group_by summarise
+#' @import ggplot2 ggh4x
 #' @export
 #' @examples
 #'
