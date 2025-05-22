@@ -84,7 +84,7 @@ VCF <- read_VCF(file)
 VCF <- split_vep(VCF)
 ## Split the tumour column and name using the format column
 VCF <- split_format(VCF, ...)
-## Get standardised columns for Depth, RDP, ADP, AF
+## Get standardised columns for Depth, RDP, ADP, AF, RDF, RDR, ADF, ADR
 VCF <- process_counts(file, VCF, ...)
 ```
 
