@@ -6,6 +6,7 @@
 #' @param category name of a column in the metadata (default: Sample)
 #' @param colours a vector of colours to label the plot by with
 #' @keywords VCF
+#' @import ComplexUpset
 #' @export
 #' @examples
 #'
