@@ -50,11 +50,21 @@ Run the full variant processing pipeline
 ```r
 library(VariantHelpers)
 ## single file
-process_vcf("path/to/file.vcf", tumourPattern = "tumour", normalPattern = "normal")
+vcf <- process_vcf("path/to/file.vcf", tumourPattern = "tumour", normalPattern = "normal")
 ## list of files
-process_VCFs(vector_of_vcfs, tumourPattern = "tumour", normalPattern = "normal")
+vcfs <- process_VCFs(vector_of_vcfs, tumourPattern = "tumour", normalPattern = "normal")
 ## All the VCF files in a folder
-process_folder("path/to/folder/", tumourPattern = "tumour", normalPattern = "normal")
+vcfs <- process_folder("path/to/folder/", tumourPattern = "tumour", normalPattern = "normal")
+```
+
+#### VariantHelpers class
+
+The variant helpers class can contain the data from several different variant callers and the package contains several functions for use with this class.
+
+```r
+## Take a vector of different folders and load variants into the variant helper class
+Paths <- list("Mutect2" = "path/to/Mutect2/", "Vardict" = "path/to/Vardict/")
+VCF <- variant_helper_from_folder_paths(paths = Paths, tumourPattern = "tumour", normalPattern = "normal")
 ```
 
 Not all paired variant callers will name the normal file NORMAL, some use the file name. So the normalPattern option can be provided to find the normal column using the pattern and change the name to NORMAL this will mean the columns will be lined up if you bind several together (default for process_VCFs and process_folder)
