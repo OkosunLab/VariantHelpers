@@ -212,8 +212,11 @@ combine_objects <- function(obj, obj2) {
     if (sum(duplicated(rv@Consensus)) > 0) {
         stop("Duplicated variants in Consensus")
     }
-    callers <- unique(c(names(WES@Callers), names(WES.TO@Callers)))
+    callers <- unique(c(names(obj@Callers), names(obj2@Callers)))
     rv@Callers <- lapply(callers, function(caller) {
+        # if (caller %in% names(obj@Callers)) {
+        #
+        # }
         rv <- dplyr::bind_rows(obj@Callers[[caller]],
                         obj2@Callers[[caller]])
         if (sum(duplicated(rv)) > 0) {

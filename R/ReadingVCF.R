@@ -203,13 +203,14 @@ set_sample_name <- function(VCF, filename, sample = NULL, tumourPattern = NULL, 
     }
     if (! "TUMOR" %in% colnames(VCF)) {
         if (! is.null(tumourPattern)) {
-            tumourCol <- colnames(VCF)[grepl(tumourPattern, colnames(VCF))]
-            VCF <- rename(VCF, "TUMOR" = tumourCol)
+            if (tumourPattern %in% colnames(VCF)) {
+                tumourCol <- colnames(VCF)[grepl(tumourPattern, colnames(VCF))]
+                VCF <- rename(VCF, "TUMOR" = tumourCol)
+            }
         } else {
             tumourCol <- colnames(VCF)[grepl(unique(VCF$Sample), colnames(VCF))]
             VCF <- rename(VCF, "TUMOR" = tumourCol)
-        }
-    }
+        }}
     if (! "NORMAL" %in% colnames(VCF)) {
         if (! is.null(normalPattern)) {
             normalCol <- colnames(VCF)[grepl(normalPattern, colnames(VCF))]
