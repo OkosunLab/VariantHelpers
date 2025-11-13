@@ -10,6 +10,8 @@ set_sample_name(
   sample = NULL,
   tumourPattern = NULL,
   normalPattern = NULL,
+  override_Varscan_handling = FALSE,
+  tumourOnly = FALSE,
   ...
 )
 }
@@ -23,6 +25,10 @@ set_sample_name(
 \item{tumourPattern}{The pattern for the tumour sample ids. Used to rename the tumour sample column to tumour (default: NULL)}
 
 \item{normalPattern}{The pattern for the normal sample ids. Used to rename the normal sample column to NORMAL (default: NULL)}
+
+\item{override_Varscan_handling}{Logical if TRUE will override additional varscan specific handelling}
+
+\item{tumourOnly}{logical if TRUE no normal sample is present}
 }
 \value{
 A dataframe of the tumour counts as columns
@@ -33,5 +39,6 @@ A function to determine the sample name and change to columns for the tumour and
 \examples{
 
 set_sample_name(VCF, filename, tumourPattern = "tumour", normalPattern = "normal")
+
 }
 \keyword{VCF}

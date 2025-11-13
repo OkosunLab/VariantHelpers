@@ -173,6 +173,23 @@ split_format <- function(VCF, ...) {
         arrange(CHROM, POS, REF, ALT)
 }
 
+#' A function to give an error for sample column finding
+#'
+#' @title split_format
+#' @param colnames column names for error message
+#' @param pattern pattern for error message
+#' @return Error
+#' @keywords VCF
+#'
+
+raise_sample_pattern_error <- function(colnames, pattern) {
+    stop(cat("No column matches: ",
+             pattern,
+             "\nColumns: ",
+             paste(colnames,
+                   collapse = ", ")))
+}
+
 #' A function to determine the sample name and change to columns for the tumour and normal data to TUMOR and NORMAL if they aren't already
 #'
 #' @title set_sample_name
@@ -181,6 +198,8 @@ split_format <- function(VCF, ...) {
 #' @param sample the sample ID. If NULL this will be determined by the filename (default: NULL)
 #' @param tumourPattern The pattern for the tumour sample ids. Used to rename the tumour sample column to tumour (default: NULL)
 #' @param normalPattern The pattern for the normal sample ids. Used to rename the normal sample column to NORMAL (default: NULL)
+#' @param override_Varscan_handling Logical if TRUE will override additional varscan specific handelling
+#' @param tumourOnly logical if TRUE no normal sample is present
 #' @return A dataframe of the tumour counts as columns
 #' @importFrom dplyr mutate rename
 #' @keywords VCF
@@ -189,32 +208,71 @@ split_format <- function(VCF, ...) {
 #' @examples
 #'
 #' set_sample_name(VCF, filename, tumourPattern = "tumour", normalPattern = "normal")
+#'
 
-set_sample_name <- function(VCF, filename, sample = NULL, tumourPattern = NULL, normalPattern = NULL, ...) {
+set_sample_name <- function(VCF,
+                            filename,
+                            sample = NULL,
+                            tumourPattern = NULL,
+                            normalPattern = NULL,
+                            override_Varscan_handling = FALSE,
+                            tumourOnly = FALSE,
+                            ...) {
+    ##If there is no sample argument
+    ##  take the file name and make it the Sample column
     if (is.null(sample)) {
         VCF <-
-            mutate(
+            dplyr::mutate(
                 VCF,
-                Sample = gsub("\\.[A-z]+[0-9]{0,1}\\.annotated.vcf", "", basename(filename)),
+                Sample = gsub("\\.[A-z]+[0-9]{0,1}\\.annotated.vcf.*", "", basename(filename)),
                 .before = "INFO"
             )
+        ##otherwise
+        ##  make the sample argument the sample column
     } else {
-        VCF <- mutate(VCF, Sample = sample)
+        VCF <- dplyr::mutate(VCF, Sample = sample)
     }
+    ## If TUMOR ISN'T a column name
     if (! "TUMOR" %in% colnames(VCF)) {
-        if (! is.null(tumourPattern)) {
-            if (tumourPattern %in% colnames(VCF)) {
+        ## IF Sample1 is in the VCF columns AND
+        ## Sample1 ISN'T in the file name
+        if ("Sample1" %in% colnames(VCF) &
+            ! override_Varscan_handling &
+            tumourOnly) {
+            tumourCol <- "Sample1"
+        }
+        ## If there is a tumour pattern
+        else if (! is.null(tumourPattern)) {
+            ## if tumourPattern is in the colnames
+            if (sum(grepl(tumourPattern, colnames(VCF))) > 0) {
+                ## get the column that matches tumourPattern
                 tumourCol <- colnames(VCF)[grepl(tumourPattern, colnames(VCF))]
-                VCF <- rename(VCF, "TUMOR" = tumourCol)
+                ## change the name of this column to TUMOR
+
+            } else {
+                raise_sample_pattern_error(colnames(VCF), tumourPattern)
             }
+            ## if there isn't a tumour pattern
         } else {
+            ## get the column containing the sample name
             tumourCol <- colnames(VCF)[grepl(unique(VCF$Sample), colnames(VCF))]
-            VCF <- rename(VCF, "TUMOR" = tumourCol)
-        }}
+        }
+        ## change the name of this column to TUMOR
+        VCF <- rename(VCF, "TUMOR" = tumourCol)
+    }
+    ## if NORMAL isn't in colnames
     if (! "NORMAL" %in% colnames(VCF)) {
+        ## if there is a normal pattern
         if (! is.null(normalPattern)) {
-            normalCol <- colnames(VCF)[grepl(normalPattern, colnames(VCF))]
-            VCF <- rename(VCF, "NORMAL" = normalCol)
+            if (sum(grepl(normalPattern, colnames(VCF)))>0) {
+                ## get the column that matches the normalPattern
+                normalCol <- colnames(VCF)[grepl(normalPattern, colnames(VCF))]
+                ## change this column to NORMAL
+                VCF <- rename(VCF, "NORMAL" = normalCol)
+            }
+            else {
+                raise_sample_pattern_error(colnames(VCF), normalPattern)
+            }
         }
     }
     VCF
