@@ -183,6 +183,6 @@ stat_summary <- function(object, category = Sample, stat = AF, FUN = mean, ...){
     name = paste(deparse(substitute(FUN)), deparse(substitute(stat)), sep = "_")
     combine_calls(object) %>%
         group_by(varID, {{category}}) %>%
-        summarise(stat = FUN({{stat}}),.groups = "keep") %>%
+        summarise(stat = FUN({{stat}}, na.rm = TRUE),.groups = "keep") %>%
         dplyr::rename(!!name := "stat")
 }
