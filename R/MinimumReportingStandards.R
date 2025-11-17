@@ -150,7 +150,7 @@ Plot_Colours = c(
 plot_min_metrics <- function(metrics,
                              tumourPattern = NULL,
                              overrideType = FALSE,
-                             colours = Plot_Colours
+                             colours = Plot_Colours,
                              ...) {
     if (! is.null(tumourPattern)) {
         metrics <- mutate(metrics,
