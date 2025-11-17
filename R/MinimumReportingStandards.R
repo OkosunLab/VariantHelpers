@@ -99,11 +99,12 @@ get_min_reporting_stats <- function(...) {
                        Metric == "PCT_TARGET_BASES_30X" ~ "Target bases at 30X (%)",
                        Metric == "PCT_TARGET_BASES_100X" ~ "Target bases at 100X (%)",
                        .default = Metric
-                   ) %>% str_to_title() %>%
+                   ) %>%
+                   str_to_title() %>%
                    case_when(
-                       Metric == "Insert Size Average" ~ "Insert Size Average (bp)",
-                       Metric == "Average Length" ~ "Average Length (bp)",
-                       .default = Metric
+                       . == "Insert Size Average" ~ "Insert Size Average (bp)",
+                       . == "Average Length" ~ "Average Length (bp)",
+                       .default = .
                    )
         ) %>%
         mutate(Group = case_when(
