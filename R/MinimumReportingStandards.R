@@ -112,7 +112,7 @@ get_min_reporting_stats <- function(...) {
             grepl("^Reads|Sequences|Pairs", Metric) ~ "Reads",
             grepl("Length|Size", Metric) ~ "Fragment Size",
             grepl("Target Bases At", Metric) ~ "Depth",
-            grepl("Targets with", Metric) ~ "Targets With 0 Reads",
+            grepl("Targets With", Metric) ~ "Targets With 0 Reads",
             .default = Metric
         ) %>% factor(levels =
                          c("Reads", "Failed Reads", "Mean Target Coverage", "Depth",
