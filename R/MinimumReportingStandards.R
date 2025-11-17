@@ -112,12 +112,30 @@ get_min_reporting_stats <- function(...) {
         )
 }
 
+
+Plot_Colours = c(
+    "Raw Total Sequences" = "olivedrab3", 
+    "Reads Mapped" = "olivedrab2", 
+    "Reads Properly Paired" = "olivedrab1",
+    "Pairs On Different Chromosomes" = "orangered1",
+    "Reads Duplicated" = "orangered3",
+    "Reads Unmapped" = "orangered4",
+    "Mean Target Coverage" = "coral",
+    "Target Bases At 10x (%)" = "darkslategray4",
+    "Target Bases At 30x (%)" = "darkslategray3",
+    "Target Bases At 100x (%)" = "darkslategray2",
+    "Average Length" = "orchid2",
+    "Insert Size Average" = "maroon3",
+    "Targets With 0 Reads" = "brown3"
+    )
+
 #' Plot the minimum metrics
 #'
 #' @title plot_min_metrics
 #' @param metrics dataframe of metrics produced by get_min_reporting_stats
 #' @param tumourPattern optional pattern to split samples into tumour/normal default: NULL
 #' @param overrideType optional ignore Type column whilst plotting
+#' @param colours oprtion vector of colours to use in the plot
 #' @return ggplot of supplied metrics
 #' @keywords VCF
 #' @importFrom dplyr mutate
@@ -132,6 +150,7 @@ get_min_reporting_stats <- function(...) {
 plot_min_metrics <- function(metrics,
                              tumourPattern = NULL,
                              overrideType = FALSE,
+                             colours = Plot_Colours
                              ...) {
     if (! is.null(tumourPattern)) {
         metrics <- mutate(metrics,
@@ -151,5 +170,8 @@ plot_min_metrics <- function(metrics,
         plot <- plot + facet_grid( ~ Group, scales = "free_x")
     }
     plot +
-        theme_classic()
+        theme_classic() + 
+        labs(title = "Minimum Reporting Metrics", fill = "") +
+        scale_fill_manual(values = colours, breaks = names(colours))
 }
+
