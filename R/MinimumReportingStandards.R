@@ -11,6 +11,7 @@
 #' Metrics, Value, Sample, Group)
 #' @keywords VCF
 #' @importFrom dplyr mutate filter select
+#' @importFrom tidyr separate_wider_delim
 #' @export
 #'
 #' @examples
@@ -23,7 +24,7 @@ get_samtools_stat <- function(path, pattern, samtools_suffix = "/samtools_stats/
             readLines(file)[grep("^SN", readLines(file))] %>%
                 as.data.frame() %>%
                 setNames("Data") %>%
-                separate_wider_delim(Data,
+                tidyr::separate_wider_delim(Data,
                                      delim = "\t",
                                      names = c(NA,"Metric", "Value", NA),
                                      too_few = "align_start") %>%
