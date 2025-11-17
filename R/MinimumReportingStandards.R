@@ -182,6 +182,7 @@ plot_min_metrics <- function(metrics,
     plot +
         theme_classic() +
         labs(title = "Minimum Reporting Metrics", fill = "", x = "") +
-        scale_fill_manual(values = colours, breaks = names(colours))
+        scale_fill_manual(values = colours, breaks = names(colours)) +
+        guides(x = guide_axis(angle = 45))
 }
 

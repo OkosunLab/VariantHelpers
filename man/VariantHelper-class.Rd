@@ -11,8 +11,27 @@ Hold variant call data
 \details{
 This class will hold your vcf data
 }
+\section{Slots}{
+
+\describe{
+\item{\code{Callers}}{list of dataframes containing call data}
+
+\item{\code{Samples}}{vecotr of sample names}
+
+\item{\code{Consensus}}{dataframe of consensus calls}
+
+\item{\code{CallIDs}}{vector}
+
+\item{\code{meta.data}}{dataframe of metadata}
+
+\item{\code{misc}}{list}
+
+\item{\code{info}}{list}
+}}
+
 \examples{
-Community()
+
+VariantHelper()
 }
 \keyword{VCF}
 \keyword{variants}

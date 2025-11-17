@@ -3,9 +3,17 @@
 #' This class will hold your vcf data
 #' @title VariantHelper Class
 #' @keywords VCF variants
+#' @slot Callers list of dataframes containing call data
+#' @slot Samples vecotr of sample names
+#' @slot Consensus dataframe of consensus calls
+#' @slot CallIDs vector
+#' @slot meta.data dataframe of metadata
+#' @slot misc list
+#' @slot info list
 #' @export
 #' @examples
-#' Community()
+#'
+#' VariantHelper()
 
 VariantHelper <- setClass(
     "VariantHelper",
@@ -90,25 +98,36 @@ update_stats <- function(object, ...) {
 
 #' A function to add metadata to the object
 #'
-#' @title add_metadata
+#' @title add_variant_metadata
 #' @return object of class VariantHelper with metadata added
 #' @param metadata dataframe of sample metadata
 #' @keywords VCF
 #' @export
 #' @examples
 #'
-#' add_metadata(obj, metadata)
+#' add_variant_metadata(obj, metadata)
 
-# setMethod("add_metadata", "VariantHelper",
+add_variant_metadata <- function(object, metadata, ...) {
+    if (sum(object@Samples %in% metadata$Sample) == length(object@Samples)) {
+        object@meta.data <- metadata
+    } else {
+        errorCondition("Samples in metadata don't match samples in object")
+    }
+    object
+}
+
+## Remove eventually to stop conflicts
+#' @rdname add_variant_metadata
+#' @export
 add_metadata <- function(object, metadata, ...) {
-              if (sum(object@Samples %in% metadata$Sample) == length(object@Samples)) {
-                  object@meta.data <- metadata
-              } else {
-                  errorCondition("Samples in metadata don't match samples in object")
-              }
-              object
-          }
-# )
+    warning("add_metadata is depricated in favour of add_variant_metadata and will be removed in a future release")
+    if (sum(object@Samples %in% metadata$Sample) == length(object@Samples)) {
+        object@meta.data <- metadata
+    } else {
+        errorCondition("Samples in metadata don't match samples in object")
+    }
+    object
+}
 
 #' A function to return the data frames holding variant calls.
 #' Can optionally return a subset of the callers defined by a vector

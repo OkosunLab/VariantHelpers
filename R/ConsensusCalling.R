@@ -143,7 +143,7 @@ return_consensus <- function(object) {
 
 #' A function to add a summary of a statistic from the individual callers to the consensus dataframe
 #'
-#' @title add_summary
+#' @title add_variant_summary
 #' @return object of class VariantHelper
 #' @param object object of class VariantHelper
 #' @param category name of a column in the metadata (default: Sample)
@@ -153,10 +153,19 @@ return_consensus <- function(object) {
 #' @export
 #' @examples
 #'
-#' add_summary(obj)
+#' add_variant_summary(obj)
 
+add_variant_summary <- function(object, ...) {
+    object@Consensus <- left_join(object@Consensus,
+                                  stat_summary(object, ...)
+    )
+    object
+}
 
+#' @rdname add_variant_summary
+#' @export
 add_summary <- function(object, ...) {
+    warning("add_summary is depricated in favour of add_variant_summary and will be removed in a future release")
     object@Consensus <- left_join(object@Consensus,
                                   stat_summary(object, ...)
     )
@@ -165,7 +174,7 @@ add_summary <- function(object, ...) {
 
 #' A function to add variants called by n callers or more to the consensus slot of the object
 #'
-#' @title stat_summary
+#' @title variant_stat_summary
 #' @return A dataframe of the consensus variant calls with the stat summary attached.
 #' @param object object of class VariantHelper
 #' @param category name of a column in the metadata (default: Sample)
@@ -177,9 +186,20 @@ add_summary <- function(object, ...) {
 #' @export
 #' @examples
 #'
-#' stat_summary(obj)
+#' variant_stat_summary(obj)
 
+variant_stat_summary <- function(object, category = Sample, stat = AF, FUN = mean, ...){
+    name = paste(deparse(substitute(FUN)), deparse(substitute(stat)), sep = "_")
+    combine_calls(object) %>%
+        group_by(varID, {{category}}) %>%
+        summarise(stat = FUN({{stat}}, na.rm = TRUE),.groups = "keep") %>%
+        dplyr::rename(!!name := "stat")
+}
+
+#' @rdname variant_stat_summary
+#' @export
 stat_summary <- function(object, category = Sample, stat = AF, FUN = mean, ...){
+    warning("stat_summary is depricated in favour of variant_stat_summary and will be removed in a future release")
     name = paste(deparse(substitute(FUN)), deparse(substitute(stat)), sep = "_")
     combine_calls(object) %>%
         group_by(varID, {{category}}) %>%
