@@ -157,7 +157,7 @@ return_consensus <- function(object) {
 
 add_variant_summary <- function(object, ...) {
     object@Consensus <- left_join(object@Consensus,
-                                  stat_summary(object, ...)
+                                  variant_stat_summary(object, ...)
     )
     object
 }
@@ -167,7 +167,7 @@ add_variant_summary <- function(object, ...) {
 add_summary <- function(object, ...) {
     warning("add_summary is depricated in favour of add_variant_summary and will be removed in a future release")
     object@Consensus <- left_join(object@Consensus,
-                                  stat_summary(object, ...)
+                                  variant_stat_summary(object, ...)
     )
     object
 }
