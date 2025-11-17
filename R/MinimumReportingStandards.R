@@ -100,8 +100,11 @@ get_min_reporting_stats <- function(...) {
                        Metric == "PCT_TARGET_BASES_100X" ~ "Target bases at 100X (%)",
                        .default = Metric
                    ) %>% str_to_title() %>%
-                   case_when(Metric == "Insert Size Average" ~ "Insert Size Average (bp)",
-                             Metric == "Average Length" ~ "Average Length (bp)",)
+                   case_when(
+                       Metric == "Insert Size Average" ~ "Insert Size Average (bp)",
+                       Metric == "Average Length" ~ "Average Length (bp)",
+                       .default = Metric
+                   )
         ) %>%
         mutate(Group = case_when(
             grepl("^Reads|Sequences|Pairs", Metric) ~ "Reads",
