@@ -93,8 +93,10 @@ get_min_reporting_stats <- function(...) {
         mutate(Value = as.numeric(Value),
                Metric =
                    case_when(
+                       Metric == "insert size average" ~ "insert size average (bp)",
+                       Metric == "average length" ~ "average length (bp)",
                        Metric == "MEAN_TARGET_COVERAGE" ~ "Mean target coverage",
-                       Metric == "ZERO_CVG_TARGETS_PCT" ~ "Targets with 0 reads",
+                       Metric == "ZERO_CVG_TARGETS_PCT" ~ "Targets with 0 reads (%)",
                        Metric == "PCT_TARGET_BASES_10X" ~ "Target bases at 10X (%)",
                        Metric == "PCT_TARGET_BASES_30X" ~ "Target bases at 30X (%)",
                        Metric == "PCT_TARGET_BASES_100X" ~ "Target bases at 100X (%)",
@@ -114,8 +116,8 @@ get_min_reporting_stats <- function(...) {
 
 
 Plot_Colours = c(
-    "Raw Total Sequences" = "olivedrab3", 
-    "Reads Mapped" = "olivedrab2", 
+    "Raw Total Sequences" = "olivedrab3",
+    "Reads Mapped" = "olivedrab2",
     "Reads Properly Paired" = "olivedrab1",
     "Pairs On Different Chromosomes" = "orangered1",
     "Reads Duplicated" = "orangered3",
@@ -135,10 +137,12 @@ Plot_Colours = c(
 #' @param metrics dataframe of metrics produced by get_min_reporting_stats
 #' @param tumourPattern optional pattern to split samples into tumour/normal default: NULL
 #' @param overrideType optional ignore Type column whilst plotting
-#' @param colours oprtion vector of colours to use in the plot
+#' @param colours option vector of colours to use in the plot
+#' @param independent string x, y or all. Vary scale within columns. Passed to facet_grid2
 #' @return ggplot of supplied metrics
 #' @keywords VCF
 #' @importFrom dplyr mutate
+#' @importFrom ggh4x facet_grid2
 #' @import ggplot2
 #' @export
 #'
@@ -165,13 +169,13 @@ plot_min_metrics <- function(metrics,
                                       Value))) +
         geom_col(position = "dodge")
     if(! overrideType & "Type" %in% colnames(metrics)) {
-        plot <- plot + facet_grid(Type ~ Group, scales = "free")
+        plot <- plot + ggh4x::facet_grid2(Type ~ Group, scales = "free", ...)
     } else {
-        plot <- plot + facet_grid( ~ Group, scales = "free_x")
+        plot <- plot + ggh4x::facet_grid2( ~ Group, scales = "free_x", ...)
     }
     plot +
-        theme_classic() + 
-        labs(title = "Minimum Reporting Metrics", fill = "") +
+        theme_classic() +
+        labs(title = "Minimum Reporting Metrics", fill = "", x = "") +
         scale_fill_manual(values = colours, breaks = names(colours))
 }
 
