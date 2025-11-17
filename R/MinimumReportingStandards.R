@@ -108,12 +108,14 @@ get_min_reporting_stats <- function(...) {
                    )
         ) %>%
         mutate(Group = case_when(
+            grepl("Unmapped|Different|Duplicated", Metric) ~ "Failed Reads",
             grepl("^Reads|Sequences|Pairs", Metric) ~ "Reads",
             grepl("Length|Size", Metric) ~ "Fragment Size",
             grepl("Target Bases At", Metric) ~ "Depth",
+            grepl("Targets with", Metric) ~ "Targets With 0 Reads",
             .default = Metric
         ) %>% factor(levels =
-                         c("Reads", "Mean Target Coverage", "Depth",
+                         c("Reads", "Failed Reads", "Mean Target Coverage", "Depth",
                            "Fragment Size", "Targets With 0 Reads"))
         )
 }
@@ -130,8 +132,8 @@ Plot_Colours = c(
     "Target Bases At 10x (%)" = "darkslategray4",
     "Target Bases At 30x (%)" = "darkslategray3",
     "Target Bases At 100x (%)" = "darkslategray2",
-    "Average Length (bp)" = "orchid2",
     "Insert Size Average (bp)" = "maroon3",
+    "Average Length (bp)" = "orchid2",
     "Targets With 0 Reads (%)" = "brown3"
     )
 

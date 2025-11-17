@@ -4,7 +4,13 @@
 \alias{plot_min_metrics}
 \title{plot_min_metrics}
 \usage{
-plot_min_metrics(metrics, tumourPattern = NULL, overrideType = FALSE, ...)
+plot_min_metrics(
+  metrics,
+  tumourPattern = NULL,
+  overrideType = FALSE,
+  colours = Plot_Colours,
+  ...
+)
 }
 \arguments{
 \item{metrics}{dataframe of metrics produced by get_min_reporting_stats}
@@ -12,6 +18,10 @@ plot_min_metrics(metrics, tumourPattern = NULL, overrideType = FALSE, ...)
 \item{tumourPattern}{optional pattern to split samples into tumour/normal default: NULL}
 
 \item{overrideType}{optional ignore Type column whilst plotting}
+
+\item{colours}{option vector of colours to use in the plot}
+
+\item{independent}{string x, y or all. Vary scale within columns. Passed to facet_grid2}
 }
 \value{
 ggplot of supplied metrics

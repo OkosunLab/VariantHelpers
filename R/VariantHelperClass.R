@@ -99,14 +99,16 @@ update_stats <- function(object, ...) {
 #'
 #' add_metadata(obj, metadata)
 
+# setMethod("add_metadata", "VariantHelper",
 add_metadata <- function(object, metadata, ...) {
-    if (sum(object@Samples %in% metadata$Sample) == length(object@Samples)) {
-        object@meta.data <- metadata
-    } else {
-        errorCondition("Samples in metadata don't match samples in object")
-    }
-    object
-}
+              if (sum(object@Samples %in% metadata$Sample) == length(object@Samples)) {
+                  object@meta.data <- metadata
+              } else {
+                  errorCondition("Samples in metadata don't match samples in object")
+              }
+              object
+          }
+# )
 
 #' A function to return the data frames holding variant calls.
 #' Can optionally return a subset of the callers defined by a vector
