@@ -93,15 +93,15 @@ get_min_reporting_stats <- function(...) {
         mutate(Value = as.numeric(Value),
                Metric =
                    case_when(
-                       Metric == "insert size average" ~ "insert size average (bp)",
-                       Metric == "average length" ~ "average length (bp)",
                        Metric == "MEAN_TARGET_COVERAGE" ~ "Mean target coverage",
                        Metric == "ZERO_CVG_TARGETS_PCT" ~ "Targets with 0 reads (%)",
                        Metric == "PCT_TARGET_BASES_10X" ~ "Target bases at 10X (%)",
                        Metric == "PCT_TARGET_BASES_30X" ~ "Target bases at 30X (%)",
                        Metric == "PCT_TARGET_BASES_100X" ~ "Target bases at 100X (%)",
                        .default = Metric
-                   ) %>% str_to_title(),
+                   ) %>% str_to_title() %>%
+                   case_when(Metric == "Insert Size Average" ~ "Insert Size Average (bp)",
+                             Metric == "Average Length" ~ "Average Length (bp)",)
         ) %>%
         mutate(Group = case_when(
             grepl("^Reads|Sequences|Pairs", Metric) ~ "Reads",
@@ -126,9 +126,9 @@ Plot_Colours = c(
     "Target Bases At 10x (%)" = "darkslategray4",
     "Target Bases At 30x (%)" = "darkslategray3",
     "Target Bases At 100x (%)" = "darkslategray2",
-    "Average Length" = "orchid2",
-    "Insert Size Average" = "maroon3",
-    "Targets With 0 Reads" = "brown3"
+    "Average Length (bp)" = "orchid2",
+    "Insert Size Average (bp)" = "maroon3",
+    "Targets With 0 Reads (%)" = "brown3"
     )
 
 #' Plot the minimum metrics
