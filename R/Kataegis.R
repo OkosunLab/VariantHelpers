@@ -3,7 +3,6 @@
 #' @title return_mean_pos_difference
 #' @param df data frame of mutation positions
 #' @keywords VCF
-#' @importFrom dplyr mutate filter select arrange
 #' @export
 #'
 #' @examples
@@ -22,7 +21,6 @@ return_mean_pos_difference <- function(df, ...) {
 #' @param df data frame of mutation positions
 #' @param idxs indexes to return
 #' @keywords VCF
-#' @importFrom dplyr mutate filter select arrange
 #' @export
 #'
 #' @examples
@@ -32,7 +30,11 @@ return_mean_pos_difference <- function(df, ...) {
 
 return_cluster_format <- function(df, idxs, ...){
     df <- df[idxs,]
-    c(chr = unique(df$CHROM), start = min(df$POS), end = max(df$POS), num = nrow(df), mean_dist = return_mean_pos_difference(df))
+    c(chr = unique(df$CHROM),
+      start = min(df$POS),
+      end = max(df$POS),
+      num = nrow(df),
+      mean_dist = return_mean_pos_difference(df))
 }
 
 #' mut_dist
@@ -41,7 +43,6 @@ return_cluster_format <- function(df, idxs, ...){
 #' @param mutations data frame of mutation positions
 #' @param distance max mean distance for variants (default: 1000)
 #' @keywords VCF
-#' @importFrom dplyr mutate filter select arrange
 #' @export
 #'
 #' @examples
@@ -150,7 +151,7 @@ process_mutation_distances.VariantHelper <- function(obj, ...) {
 #' @param list of mutation distances dataframes
 #' @param obj of type VariantHelper
 #' @keywords VCF
-#' @importFrom dplyr mutate filter select arrange rename
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
 #' @export
 #'
 #' @examples
@@ -194,7 +195,9 @@ mutation_dist_to_grange.VariantHelper <- function(obj) {
 #' @param mut_dist data frame of mutation positions
 #' @param Genes GRanges object of genes to annotate
 #' @keywords VCF
-#' @importFrom dplyr mutate filter select arrange rename
+#' @importFrom dplyr select rename
+#' @importFrom stringi stri_remove_empty
+#' @importFrom GenomicRanges findOverlaps
 #' @export
 #'
 #' @examples
@@ -254,7 +257,6 @@ annotate_mutation_dist.VariantHelper <- function(obj, ...) {
 #' @param obj of type VariantHelper
 #' @param Genes GRanges object of genes to annotate
 #' @keywords VCF
-#' @importFrom dplyr mutate filter select arrange
 #' @export
 #'
 #' @examples
@@ -290,4 +292,36 @@ detect_kataegis.VariantHelper <- function(obj) {
         annotate_mutation_dist()
 }
 
+#' get_all_ens_genes
+#'
+#' @title get_all_ens_genes
+#' @param mart object of type mart
+#' @keywords VCF
+#' @importFrom biomaRt getBM useMart
+#' @importFrom dplyr rename mutate
+#' @importFrom GenomicRanges makeGRangesFromDataFrame
+#' @export
+#'
+#' @examples
+#'
+#' get_all_ens_genes()
 
+get_all_ens_genes <- function(mart = NULL) {
+    if ( is.null(mart) ){
+        mart <- biomaRt::useMart(biomart = "ENSEMBL_MART_ENSEMBL",
+                                 dataset = "hsapiens_gene_ensembl")
+    }
+    biomaRt::getBM(mart = mart,
+                   attributes = c("chromosome_name",
+                                  "start_position",
+                                  "end_position",
+                                  "band",
+                                  "external_gene_name")) %>%
+        mutate(chromosome_name = gsub("^", "chr", chromosome_name)) %>%
+        dplyr::rename("Gene" = "external_gene_name") %>%
+        GenomicRanges::makeGRangesFromDataFrame(
+            keep.extra.columns = TRUE,
+            ignore.strand = TRUE,
+            start.field = "start_position",
+            end.field = "end_position")
+}
