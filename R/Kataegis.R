@@ -214,8 +214,6 @@ annotate_mutation_dist.VariantHelper <- function(obj, ...) {
 #'
 #' @examples
 #'
-#' detect_kataegis()
-#'
 #' detect_kataegis(df)
 #'
 #' detect_kataegis(list)
