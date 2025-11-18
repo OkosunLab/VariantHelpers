@@ -143,6 +143,51 @@ process_mutation_distances.VariantHelper <- function(obj, ...) {
     process_mutation_distances(obj@Callers)
 }
 
+#' mutation_dist_to_grange
+#'
+#' @title mutation_dist_to_grange
+#' @param df of mutations distances
+#' @param list of mutation distances dataframes
+#' @param obj of type VariantHelper
+#' @keywords VCF
+#' @importFrom dplyr mutate filter select arrange rename
+#' @export
+#'
+#' @examples
+#'
+#' mutation_dist_to_grange()
+#'
+#' mutation_dist_to_grange(df)
+#'
+#' mutation_dist_to_grange(list)
+#'
+#' mutation_dist_to_grange(obj)
+
+mutation_dist_to_grange <- function(x) {
+    UseMethod("mutation_dist_to_grange")
+}
+#' @rdname mutation_dist_to_grange
+#' @export
+mutation_dist_to_grange.data.frame <- function(df) {
+    df %>%
+        GenomicRanges::makeGRangesFromDataFrame(
+            keep.extra.columns = TRUE,
+            ignore.strand = TRUE,
+            start.field = "start",
+            end.field = "end")
+}
+#' @rdname mutation_dist_to_grange
+#' @export
+mutation_dist_to_grange.list <- function(list) {
+    lapply(list, mutation_dist_to_grange)
+}
+#' @rdname mutation_dist_to_grange
+#' @export
+mutation_dist_to_grange.VariantHelper <- function(obj) {
+    lapply(obj@misc$mutation_dist, mutation_dist_to_grange)
+}
+
+
 #' annotate_mutation_dist
 #'
 #' @title annotate_mutation_dist
