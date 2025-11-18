@@ -140,6 +140,111 @@ process_mutation_distances.list <- function(list, ...) {
 #' @rdname process_mutation_distances
 #' @export
 process_mutation_distances.VariantHelper <- function(obj, ...) {
-    obj@misc$mutation_dist <- process_mutation_distances(obj@Callers)
-    obj
+    process_mutation_distances(obj@Callers)
 }
+
+#' annotate_mutation_dist
+#'
+#' @title annotate_mutation_dist
+#' @param mut_dist data frame of mutation positions
+#' @param Genes GRanges object of genes to annotate
+#' @keywords VCF
+#' @importFrom dplyr mutate filter select arrange rename
+#' @export
+#'
+#' @examples
+#'
+#' annotate_mutation_dist()
+#'
+#' annotate_mutation_dist(df)
+#'
+#' annotate_mutation_dist(list)
+#'
+#' annotate_mutation_dist(obj)
+
+
+annotate_mutation_dist <- function(x) {
+    UseMethod("annotate_mutation_dist")
+}
+
+#' @rdname annotate_mutation_dist
+#' @export
+annotate_mutation_dist.data.frame <- function(mut_dist, Genes = NULL, ...) {
+    mut_dist <- mutation_dist_to_grange(mut_dist)
+    if ( is.null(Genes) ) {
+        Genes <- get_all_ens_genes(...)
+    }
+    Match <- GenomicRanges::findOverlaps(mut_dist, Genes) %>% as.data.frame()
+    cbind(mut_dist[Match$queryHits,] %>% as.data.frame(),
+          Genes[Match$subjectHits,] %>% as.data.frame() %>% dplyr::select(-c(1:5))) %>%
+        unite("Locus", c(seqnames, band), sep = "") %>%
+        group_by(Sample, start, end, num, mean_dist) %>%
+        summarize(Locus = Locus %>% unique() %>% stringi::stri_remove_empty() %>% paste(collapse = ", "),
+                  Gene = Gene %>% unique() %>% stringi::stri_remove_empty() %>% paste(collapse = ", "),
+                  .groups = "drop") %>%
+        dplyr::select(all_of(c("Sample", "Locus", "start", "end", "num", "mean_dist", "Gene"))) %>%
+        dplyr::rename("Start Position (bp)" = start,
+                      "End Position (bp)" = end,
+                      "Number of Mutations" = num,
+                      "Mean Intermutation Distance (bp)" = mean_dist)
+}
+
+#' @rdname annotate_mutation_dist
+#' @export
+annotate_mutation_dist.list <- function(list, ...) {
+    lapply(list, annotate_mutation_dist, ...)
+}
+
+#' @rdname annotate_mutation_dist
+#' @export
+annotate_mutation_dist.VariantHelper <- function(obj, ...) {
+    lapply(obj@misc$mutation_dist, annotate_mutation_dist, ...)
+}
+
+#' detect_kataegis
+#'
+#' @title detect_kataegis
+#' @param df of mutations
+#' @param list of mutation dataframes
+#' @param obj of type VariantHelper
+#' @param Genes GRanges object of genes to annotate
+#' @keywords VCF
+#' @importFrom dplyr mutate filter select arrange
+#' @export
+#'
+#' @examples
+#'
+#' detect_kataegis()
+#'
+#' detect_kataegis(df)
+#'
+#' detect_kataegis(list)
+#'
+#' detect_kataegis(obj)
+
+detect_kataegis <- function(x){
+    UseMethod("detect_kataegis")
+}
+
+#' @rdname detect_kataegis
+#' @export
+detect_kataegis.data.frame <- function(df) {
+    process_mutation_distances(df) %>%
+        annotate_mutation_dist()
+}
+
+#' @rdname detect_kataegis
+#' @export
+detect_kataegis.list <- function(list) {
+    process_mutation_distances(list) %>%
+        annotate_mutation_dist()
+}
+
+#' @rdname detect_kataegis
+#' @export
+detect_kataegis.VariantHelper <- function(obj) {
+    process_mutation_distances(obj) %>%
+        annotate_mutation_dist()
+}
+
+
