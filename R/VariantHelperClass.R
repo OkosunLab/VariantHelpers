@@ -75,6 +75,9 @@ variant_helper_from_list_of_calls <- function(Calls, meta.data = NULL, ...) {
     rv <- update_stats(rv)
     if (! is.null(meta.data)) {
         rv <- add_metadata(rv, metadata = meta.data)
+    } else {
+        rv <- add_metadata(rv,
+                           metadata = as.data.frame(list(Sample = rv@Samples)))
     }
     return(rv)
 }
@@ -119,6 +122,7 @@ add_variant_metadata <- function(object, metadata, ...) {
 ## Remove eventually to stop conflicts
 #' @rdname add_variant_metadata
 #' @export
+
 add_metadata <- function(object, metadata, ...) {
     warning("add_metadata is depricated in favour of add_variant_metadata and will be removed in a future release")
     if (sum(object@Samples %in% metadata$Sample) == length(object@Samples)) {
