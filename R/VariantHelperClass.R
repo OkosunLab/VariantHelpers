@@ -74,9 +74,9 @@ variant_helper_from_list_of_calls <- function(Calls, meta.data = NULL, ...) {
     rv@Callers <- Calls
     rv <- update_stats(rv)
     if (! is.null(meta.data)) {
-        rv <- add_metadata(rv, metadata = meta.data)
+        rv <- add_variant_metadata(rv, metadata = meta.data)
     } else {
-        rv <- add_metadata(rv,
+        rv <- add_variant_metadata(rv,
                            metadata = as.data.frame(list(Sample = rv@Samples)))
     }
     return(rv)

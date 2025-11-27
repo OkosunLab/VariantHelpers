@@ -61,10 +61,13 @@ get_picard_stat <- function(path, picard_suffix = "/depth/picard/", ...) {
     list.files(paste0(path, picard_suffix), full.names = TRUE) %>%
         lapply(function(file) {
             read_delim(file, delim = "\t", skip = 6, n_max = 1, show_col_types = FALSE) %>%
-                dplyr::select(-BAIT_SET) %>%
-                mutate(Sample = gsub(".*\\/(.*).txt", "\\1", file), .before = BAIT_TERRITORY) %>%
-                pivot_longer(-1, names_to = "Metric", values_to = "Value") %>%
-                filter(Metric %in% c("MEAN_TARGET_COVERAGE", "ZERO_CVG_TARGETS_PCT", "PCT_TARGET_BASES_10X", "PCT_TARGET_BASES_30X", "PCT_TARGET_BASES_100X"))
+                dplyr::select(all_of(c("MEAN_TARGET_COVERAGE",
+                                       "ZERO_CVG_TARGETS_PCT",
+                                       "PCT_TARGET_BASES_10X",
+                                       "PCT_TARGET_BASES_30X",
+                                       "PCT_TARGET_BASES_100X"))) %>%
+                mutate(Sample = gsub(".*\\/(.*).txt", "\\1", file), .before = MEAN_TARGET_COVERAGE) %>%
+                pivot_longer(-1, names_to = "Metric", values_to = "Value")
         }) %>%
         bind_rows()
 }
