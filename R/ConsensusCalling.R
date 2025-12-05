@@ -15,6 +15,8 @@
 upset_by_caller <- function(object,
                             category = Sample,
                             colours = NULL, ...) {
+    warning("This function relies on the ComplexUpset package which is currently broken for ggplot v4.0.0+
+            I am working on a completely ggplot based implementation for this now.")
     if (is.null(colours)) {
         s.colour <- scale_fill_discrete(guide = "none")
     } else {
