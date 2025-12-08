@@ -23,6 +23,10 @@ setMethod("show", "upsetti_spaghetti",
           function(object) {
               if ("final" %in% names(object@plots)) {
                   print(object@plots$final)
+              } else if ("set" %in% names(object@plots) &
+                         "intersect" %in% names(object@plots) &
+                         "group" %in% names(object@plots)) {
+                  assemble_upset(object)
               } else {
                   print("This spaghetti isn't very upsetti")
               }
@@ -98,6 +102,7 @@ generate_intersect_plot <- function(x, ...) {
 #' @export
 
 generate_intersect_plot.data.frame <- function(df,
+                                               set = name,
                                                id,
                                                colour = NULL,
                                                col_vec = NULL,
@@ -108,7 +113,7 @@ generate_intersect_plot.data.frame <- function(df,
         df <- dplyr::group_by(df, {{id}}, {{colour}})
     }
     df <- df %>%
-        dplyr::summarise(groups = paste0(name, collapse = ", "),
+        dplyr::summarise(groups = paste0({{set}}, collapse = ", "),
                          .groups = "keep") %>%
         dplyr::group_by(groups) %>%
         dplyr::mutate(n = n())
@@ -149,14 +154,18 @@ generate_set_plot <- function(x, ...) {
 #' @rdname generate_X_plot
 #' @export
 
-generate_set_plot.data.frame <- function(df, colour = NULL, col_vec = NULL, ...) {
+generate_set_plot.data.frame <- function(df,
+                                         set = name,
+                                         colour = NULL,
+                                         col_vec = NULL,
+                                         ...) {
     df <- df %>%
-        dplyr::group_by(name) %>%
+        dplyr::group_by({{set}}) %>%
         dplyr::mutate(n = n())
     if ( missing(colour) ) {
-        plot <- ggplot(df, aes(y = reorder(name, n)))
+        plot <- ggplot(df, aes(y = reorder({{set}}, n)))
     } else {
-        plot <- ggplot(df, aes(y = reorder(name, n), fill = {{colour}}))
+        plot <- ggplot(df, aes(y = reorder({{set}}, n), fill = {{colour}}))
     }
     plot <- plot +
         geom_bar() +
@@ -194,6 +203,7 @@ generate_group_plot <- function(x, ...) {
 #' @export
 
 generate_group_plot.data.frame <- function(df,
+                                           set = name,
                                            id,
                                            set_plot,
                                            intersect_plot,
@@ -202,7 +212,7 @@ generate_group_plot.data.frame <- function(df,
     yaxis <- extract_scale(set_plot, "y")
     df %>%
         dplyr::group_by({{id}}) %>%
-        dplyr::summarise(groups = paste0(name, collapse = ", ")) %>%
+        dplyr::summarise(groups = paste0({{set}}, collapse = ", ")) %>%
         dplyr::mutate(split = groups) %>%
         tidyr::separate_longer_delim(split, ", ") %>%
         ggplot(aes(
@@ -259,18 +269,12 @@ generate_group_plot.upsetti_spaghetti <- function(obj, ...) {
 #' assemble_upset(obj)
 
 process_upsetti_plots <- function(obj, ...) {
-    if ( ! "intersect" %in% names(obj@plots) ) {
-        obj@plots$intersect <-
-            generate_intersect_plot(obj, ...)
-    }
-    if ( ! "set" %in% names(obj@plots) ) {
-        obj@plots$set <-
-            generate_set_plot(obj, ...)
-    }
-    if ( ! "group" %in% names(obj@plots) ) {
-        obj@plots$group <-
-            generate_group_plot(obj, ...)
-    }
+    obj@plots$intersect <-
+        generate_intersect_plot(obj, ...)
+    obj@plots$set <-
+        generate_set_plot(obj, ...)
+    obj@plots$group <-
+        generate_group_plot(obj, ...)
     obj
 }
 
