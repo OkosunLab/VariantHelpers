@@ -26,7 +26,7 @@ setMethod("show", "upsetti_spaghetti",
               } else if ("set" %in% names(object@plots) &
                          "intersect" %in% names(object@plots) &
                          "group" %in% names(object@plots)) {
-                  assemble_upset(object)
+                  print(assemble_upset(object))
               } else {
                   print("This spaghetti isn't very upsetti")
               }

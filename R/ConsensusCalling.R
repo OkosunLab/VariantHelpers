@@ -13,41 +13,18 @@
 #' upset_by_caller(obj)
 
 upset_by_caller <- function(object,
-                            category = Sample,
-                            colours = NULL, ...) {
-    warning("This function relies on the ComplexUpset package which is currently broken for ggplot v4.0.0+
-            I am working on a completely ggplot based implementation for this now.")
-    if (is.null(colours)) {
-        s.colour <- scale_fill_discrete(guide = "none")
-    } else {
-        s.colour <- scale_fill_manual(values = colours, guide = "none")
-    }
-    combine_calls(object, ...) %>%
-        dplyr::select(varID, Caller, Sample, {{category}}, Consequence) %>%
-        mutate(values = as.integer(1)) %>%
-        pivot_wider(
-            names_from = Caller,
-            values_from = values,
-            values_fill = as.integer(0)
-        ) %>%
-        as.data.frame() %>%
-        ComplexUpset::upset(
-            names(object@Callers),
-            name = "caller",
-            width_ratio = 0.2,
-            base_annotations = list(
-                'Intersection size' = intersection_size(
-                    mapping = aes(fill = {{category}})
-                ) +
-                    s.colour
-            ),
-            set_sizes = (
-                upset_set_size(geom = geom_bar(aes(
-                    fill = {{category}}, x = group
-                ),
-                width = 0.8),) +
-                    s.colour
-            ))
+                            set=Caller,
+                            id = sam_var_id,
+                            colour = Sample,
+                            col_vec = NULL, ...) {
+    combine_calls(object) %>%
+        mutate(sam_var_id = paste(varID, Sample)) %>%
+        filter(!is.na(Caller)) %>%
+        plot_upset(set = {{set}},
+                   id = {{id}},
+                   colour = {{colour}},
+                   col_vec = col_vec,
+                   ...)
 }
 
 #' A function to count the number of callers that called each variant.
