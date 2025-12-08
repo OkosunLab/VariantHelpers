@@ -15,19 +15,19 @@
 \usage{
 generate_intersect_plot(x, ...)
 
-\method{generate_intersect_plot}{data.frame}(df, id, colour = NULL, col_vec = NULL, ...)
+\method{generate_intersect_plot}{data.frame}(df, set = name, id, colour = NULL, col_vec = NULL, ...)
 
 \method{generate_intersect_plot}{upsetti_spaghetti}(obj, ...)
 
 generate_set_plot(x, ...)
 
-\method{generate_set_plot}{data.frame}(df, colour = NULL, col_vec, ...)
+\method{generate_set_plot}{data.frame}(df, set = name, colour = NULL, col_vec = NULL, ...)
 
 \method{generate_set_plot}{upsetti_spaghetti}(obj, ...)
 
 generate_group_plot(x, ...)
 
-\method{generate_group_plot}{data.frame}(df, id, set_plot, intersect_plot, ...)
+\method{generate_group_plot}{data.frame}(df, set = name, id, set_plot, intersect_plot, ...)
 
 \method{generate_group_plot}{upsetti_spaghetti}(obj, ...)
 }

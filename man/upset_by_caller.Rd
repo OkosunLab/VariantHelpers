@@ -4,7 +4,14 @@
 \alias{upset_by_caller}
 \title{upset_by_caller}
 \usage{
-upset_by_caller(object, category = Sample, colours = NULL, ...)
+upset_by_caller(
+  object,
+  set = Caller,
+  id = sam_var_id,
+  colour = Sample,
+  col_vec = NULL,
+  ...
+)
 }
 \arguments{
 \item{object}{object of class VariantHelper}

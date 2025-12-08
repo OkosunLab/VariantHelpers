@@ -4,7 +4,7 @@
 \alias{generate_upsetti}
 \title{generate_upsetti}
 \usage{
-generate_upsetti(df, cols, ...)
+generate_upsetti(df, cols = NULL, ...)
 }
 \arguments{
 \item{df}{a wide data.frame of data to plot}
