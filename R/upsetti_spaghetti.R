@@ -58,11 +58,14 @@ mutate.upsetti_spaghetti <- function(object, ...) {
 #'
 #' generate_upsetti(df, cols = c("col1", "col2"))
 
-generate_upsetti <- function(df, cols, ...) {
+generate_upsetti <- function(df, cols = NULL, ...) {
     rv <- upsetti_spaghetti()
-    rv@data <- df %>%
-        tidyr::pivot_longer(all_of(cols)) %>%
-        dplyr::filter(value == TRUE)
+    rv@data <- df
+    if (! is.null(cols)) {
+        rv@data <- rv@data %>%
+            tidyr::pivot_longer(all_of(cols)) %>%
+            dplyr::filter(value == TRUE)
+    }
     rv
 }
 
@@ -140,14 +143,13 @@ generate_intersect_plot.upsetti_spaghetti <- function(obj, ...) {
 #' @rdname generate_X_plot
 #' @export
 
-
 generate_set_plot <- function(x, ...) {
     UseMethod("generate_set_plot")
 }
 #' @rdname generate_X_plot
 #' @export
 
-generate_set_plot.data.frame <- function(df, colour = NULL, col_vec, ...) {
+generate_set_plot.data.frame <- function(df, colour = NULL, col_vec = NULL, ...) {
     df <- df %>%
         dplyr::group_by(name) %>%
         dplyr::mutate(n = n())
