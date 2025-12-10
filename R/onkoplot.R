@@ -223,7 +223,7 @@ set_multi_hit <- function(variants,
                           ...) {
     variants <- variants %>%
         group_by({{Gene}}, {{category}}) %>%
-        summarize(n = n(), {{Type}} := paste({{Type}}, collapse = "|")) %>%
+        summarise(n = n(), {{Type}} := paste({{Type}}, collapse = "|")) %>%
         mutate({{Type}} := ifelse(n == 1, {{Type}}, multi_hit_label))
     variants
 }
