@@ -1,7 +1,7 @@
 Package: VariantHelpers
 Type: Package
 Title: Functions To Assist With Variant Call Analysis
-Version: 0.2.1
+Version: 0.2.11
 Author: Findlay Bewicke-Copley
 Maintainer: Findlay Bewicke-Copley <f.copley@qmul.ac.uk>
 Description: A collection of functions to help with Variant analysis
