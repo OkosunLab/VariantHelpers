@@ -1,31 +1,32 @@
-#' #' A function to generate an upset plot of the consensus variants.
-#' #'
-#' #' @title upset_by_caller
-#' #' @return upset plot of the variants called by the callers.
-#' #' @param object object of class VariantHelper
-#' #' @param category name of a column in the metadata (default: Sample)
-#' #' @param colours a vector of colours to label the plot by with
-#' #' @keywords VCF
-#' #' @import ComplexUpset
-#' #' @export
-#' #' @examples
-#' #'
-#' #' upset_by_caller(obj)
+#' A function to generate an upset plot of the consensus variants.
 #'
-#' upset_by_caller <- function(object,
-#'                             set=Caller,
-#'                             id = sam_var_id,
-#'                             colour = Sample,
-#'                             col_vec = NULL, ...) {
-#'     combine_calls(object) %>%
-#'         mutate(sam_var_id = paste(varID, Sample)) %>%
-#'         filter(!is.na(Caller)) %>%
-#'         plot_upset(set = {{set}},
-#'                    id = {{id}},
-#'                    colour = {{colour}},
-#'                    col_vec = col_vec,
-#'                    ...)
-#' }
+#' @title upset_by_caller
+#' @return upset plot of the variants called by the callers.
+#' @param object object of class VariantHelper
+#' @param set column in the calls for the set (default = Caller)
+#' @param id column in the calls for the unique id (default = sam_var_id a newly constructed column made of varID and Sample)
+#' @param category name of a column in the metadata (default: Sample)
+#' @param colours a vector of colours to label the plot by with
+#' @keywords VCF
+#' @export
+#' @examples
+#'
+#' upset_by_caller(obj)
+
+upset_by_caller <- function(object,
+                            set=Caller,
+                            id = sam_var_id,
+                            colour = Sample,
+                            col_vec = NULL, ...) {
+    combine_calls(object) %>%
+        mutate(sam_var_id = paste(varID, Sample)) %>%
+        filter(!is.na(Caller)) %>%
+        plot_upset(set = {{set}},
+                   id = {{id}},
+                   colour = {{colour}},
+                   col_vec = col_vec,
+                   ...)
+}
 
 #' A function to count the number of callers that called each variant.
 #'
