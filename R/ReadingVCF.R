@@ -293,8 +293,8 @@ set_sample_name <- function(VCF,
 #'
 #' split_vep(VCF, header = FALSE)
 
-split_vep <- function(VCF, header = FALSE, pick = TRUE, verbose = FALSE, ...) {
-    if (header == FALSE) {
+split_vep <- function(VCF, header = NULL, pick = TRUE, verbose = FALSE, ...) {
+    if (is.null(header)) {
         ## This is the headings that should come out of the snakemake pipeline
         header = c("Consequence", "IMPACT", "SYMBOL", "Gene", "Feature_type",
                    "Feature", "BIOTYPE", "EXON", "INTRON", "HGVSc", "HGVSp",
